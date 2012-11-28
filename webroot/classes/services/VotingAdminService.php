@@ -1,7 +1,7 @@
 <?php
 
 interface VotingAdminService {
-
+	
 	public function create(Voting $voting);
 	
 	public function update(Voting $voting);
