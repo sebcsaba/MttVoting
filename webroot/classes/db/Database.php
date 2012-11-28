@@ -17,4 +17,12 @@ class Database {
 		// @return arrya
 	}
 	
+	public function update(UpdateBuilder $query) {
+		// TODO
+	}
+	
+	public function insert($table, $array) {
+		// TODO
+	}
+	
 }
