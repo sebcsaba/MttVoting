@@ -1,4 +1,4 @@
-CREATE TABLE voting (
+CREATE TABLE privatevoting_voting (
     id INT PRIMARY KEY NOT NULL auto_increment,
     creator_user_id INT NOT NULL,
     title VARCHAR NOT NULL,
@@ -8,20 +8,20 @@ CREATE TABLE voting (
     private BOOL NOT NULL
 );
 
-CREATE TABLE answer (
+CREATE TABLE privatevoting_answer (
     id INT PRIMARY KEY NOT NULL auto_increment,
     fk_voting INT NOT NULL REFERENCES voting(id),
     title VARCHAR NOT NULL
 );
 
-CREATE TABLE participant (
+CREATE TABLE privatevoting_participant (
     id INT PRIMARY KEY NOT NULL auto_increment,
     fk_voting INT NOT NULL REFERENCES voting(id),
     user_id INT NOT NULL,
     voted BOOL NOT NULL
 );
 
-CREATE TABLE vote (
+CREATE TABLE privatevoting_vote (
     id INT PRIMARY KEY NOT NULL auto_increment,
     fk_voting INT NOT NULL REFERENCES voting(id),
     fk_answer INT NOT NULL REFERENCES answer(id),
