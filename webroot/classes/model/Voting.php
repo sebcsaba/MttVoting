@@ -47,6 +47,19 @@ class Voting {
 	 */
 	private $participants;
 	
+	public function __construct($id, $creatorUserId, $title, $description, $startDate, $stopDate, $private, 
+			array $answers, array $participants) {
+		$this->id = $id;
+		$this->creatorUserId = $creatorUserId;
+		$this->title = $title;
+		$this->description = $description;
+		$this->startDate = $startDate;
+		$this->stopDate = $stopDate;
+		$this->private = $private;
+		$this->answers = $answers;
+		$this->participants = $participants;
+	}
+	
 	public function getId() {
 		return $this->id;
 	}

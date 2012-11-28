@@ -102,6 +102,15 @@ class QueryBuilder {
 	 */
 	private $withRecursiveIteration;
 	
+	public function __construct() {}
+	
+	/**
+	 * @return QueryBuilder
+	 */
+	public static function create() {
+		return new self();
+	}
+	
 	/**
 	 * Egy SELECT clause-t ad a lekérdezéshez.
 	 *
