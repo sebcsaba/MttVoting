@@ -3,7 +3,7 @@
 interface UserService {
 
 	/**
-	 * @return User
+	 * @return User or null
 	 */
 	public function authenticate();
 	

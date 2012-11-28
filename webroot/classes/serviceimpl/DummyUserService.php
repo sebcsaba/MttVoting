@@ -13,7 +13,7 @@ class DummyUserService implements UserService {
 	}
 	
 	/**
-	 * @return User
+	 * @return User or null
 	 */
 	public function authenticate() {
 		return $this->users[0];
