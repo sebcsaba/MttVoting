@@ -13,7 +13,10 @@
 		Ezeken szavazhatsz:
 		<ul>
 			<? foreach ($request->getData('answerableFor') as $voting) { ?>
-				<li><a href="#"><?h($voting->getTitle())?></a>
+				<li><a href="#"><?h($voting->getTitle())?></a></li>
+			<? } ?>
+			<? if (is_empty($request->getData('answerableFor'))) { ?>
+				<li>(Nincs ilyen szavazás)</li>
 			<? } ?>
 		</ul>
 	</div>

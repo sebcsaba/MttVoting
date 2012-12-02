@@ -22,7 +22,7 @@ function h($str) {
 	if (func_num_args()>1) {
 		$str = call_user_func_array('sprintf', func_get_args());
 	}
-	return htmlspecialchars($str);
+	print htmlspecialchars($str);
 }
 
 /**
@@ -34,4 +34,14 @@ function func_get_args_but_first() {
 	$args = $st[1]['args'];
 	array_shift($args);
 	return $args;
+}
+
+/**
+ * Return true, if the given parameter is empty.
+ * Wrapper function for php empty predicate
+ * @param mixed $data
+ * @return boolean
+ */
+function is_empty($data) {
+	return empty($data);
 }
