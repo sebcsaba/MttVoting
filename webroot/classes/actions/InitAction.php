@@ -18,6 +18,7 @@ class InitAction implements Action {
 		$user = $this->userService->authenticate();
 		$request->setData('username', $user->getLoginName());
 		$request->setData('answerableFor', $this->votingListingService->getAnswerableFor($user));
+		$request->setData('openedOf', $this->votingListingService->getAllOpenedOf($user));
 		return new PageForward('index');
 	}
 	
