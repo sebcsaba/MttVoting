@@ -6,8 +6,16 @@
 	<link rel="stylesheet" href="resources/style.css"/>
 </head>
 <body>
-<div id="logininfo">
-Üdv, <?= $request->get('username') ?>
-</div>
+	<div id="logininfo">
+		Üdv, <?h($request->getData('username'))?>!
+	</div>
+	<div id="answerable_for">
+		Ezeken szavazhatsz:
+		<ul>
+			<? foreach ($request->getData('answerableFor') as $voting) { ?>
+				<li><a href="#"><?h($voting->getTitle())?></a>
+			<? } ?>
+		</ul>
+	</div>
 </body>
 </html>
