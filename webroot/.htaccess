@@ -1,0 +1,6 @@
+Options -Indexes
+RewriteEngine On
+RedirectMatch 404 config
+RedirectMatch 404 temp
+RedirectMatch 404 pages
+RedirectMatch 404 classes
