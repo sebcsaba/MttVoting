@@ -21,7 +21,7 @@ class Database {
 		// TODO
 	}
 	
-	public function insert($table, $array) {
+	public function insert($table, array $array) {
 		// TODO
 	}
 	

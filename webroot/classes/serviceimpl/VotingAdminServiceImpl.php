@@ -11,7 +11,7 @@ class VotingAdminServiceImpl extends DbServiceBase implements VotingAdminService
 			'stop_date' => $voting->getStopDate(),
 			'private' => $voting->getPrivate()
 		);
-		$votingId = $this->db->insert('privatevoting_voting', $voting);
+		$votingId = $this->db->insert('privatevoting_voting', $votingRow);
 		
 		foreach ($voting->getAnswers() as $title) {
 			$answerRow = array(
