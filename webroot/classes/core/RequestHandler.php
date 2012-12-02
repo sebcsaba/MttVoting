@@ -3,25 +3,26 @@
 class RequestHandler {
 	
 	public function run() {
-		$forward = $this->parseForwardFromRequest();
+		$request = $this->parseRequest();
+		$forward = $this->parseInitialForward($request);
 		do {
-			$forward = $this->processActionForward($forward);
+			$forward = $this->processActionForward($request, $forward);
 		} while (!is_null($forward));
 	}
 	
 	/**
 	 * @return Forward
 	 */
-	private function parseForwardFromRequest() {
+	private function parseInitialForward(Request $request) {
 		// TODO implement: parse $_REQUEST to initial Forward
-		return new PageForward('index');
+		return new ActionForward('InitAction');
 	}
 	
 	/**
 	 * @param Forward $forward
 	 * @return Forward
 	 */
-	private function processActionForward(Forward $forward) {
+	private function processActionForward(Request $request, Forward $forward) {
 		if ($forward instanceof RedirectForward) {
 			header('Location: '.$forward->getLocation());
 			return null;
@@ -31,8 +32,15 @@ class RequestHandler {
 		} else if ($forward instanceof ActionForward) {
 			$className = $forward->getClassName();
 			$action = new $className(); // TODO implement DI here
-			return $action->serve($_REQUEST);
+			return $action->serve($request);
 		}
+	}
+	
+	/**
+	 * @return Requets
+	 */
+	private function parseRequest() {
+		return new Request($_REQUEST);
 	}
 	
 }

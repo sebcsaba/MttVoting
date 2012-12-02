@@ -3,9 +3,9 @@
 interface Action {
 
 	/**
-	 * @param requets data $request
+	 * @param Request $request
 	 * @return Forward
 	 */
-	public function serve(array $request);
+	public function serve(Request $request);
 	
 }
