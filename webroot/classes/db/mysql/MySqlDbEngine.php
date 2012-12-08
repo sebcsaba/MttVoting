@@ -61,6 +61,9 @@ class MySqlDbEngine extends DbEngine {
 	public function execPrimitive($sql_string) {
 		$result = @mysql_query($sql_string, $this->conn);
 		if ($result) {
+			if ($result===true) {
+				return 0;
+			}
 			$affected_rows = mysql_affected_rows($result);
 			mysql_free_result($result);
 			return $affected_rows;
@@ -78,6 +81,9 @@ class MySqlDbEngine extends DbEngine {
 	public function execNative(NativeSQL $query) {
 		$result = @mysql_query($query->convertToString($this->getDialect()), $this->conn);
 		if ($result) {
+			if ($result===true) {
+				return 0;
+			}
 			$affected_rows = mysql_affected_rows($result);
 			mysql_free_result($result);
 			return $affected_rows;
