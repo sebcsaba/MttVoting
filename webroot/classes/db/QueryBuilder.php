@@ -3,13 +3,13 @@
 /**
  * SQL lekérdezést felépítő osztály. Fluent interfacet használ, így lehet a következő módon kezelni:
  * 
- * $qb = QueryBuilder::create($dialect)->select('field0')->from('table1')->where('field2=?',42);
+ * $qb = QueryBuilder::create()->select('field0')->from('table1')->where('field2=?',42);
  *
  * Ha select clause-t nem adunk meg, akkor alapértelmezésként * kerül bele.
  * A paraméterek helyére ? kerüljön.
  * 
  */
-class QueryBuilder {
+class QueryBuilder implements SQL {
 	
 	/**
 	 * A lekérdezés SELECT clause-ai
@@ -54,7 +54,7 @@ class QueryBuilder {
 	private $whereData = array();
 	
 	/**
-	 * A lekérdezés ORDER BY clause-ai
+	 * A lekérdezés GROUP BY clause-ai
 	 *
 	 * @var array
 	 */
@@ -80,27 +80,6 @@ class QueryBuilder {
 	 * @var integer
 	 */
 	private $offset;
-	
-	/**
-	 * WITH RECURSIVE prefixes lekérdezés rekurzív view-jának neve
-	 * 
-	 * @var string
-	 */
-	private $withRecursiveView;
-	
-	/**
-	 * WITH RECURSIVE prefixes lekérdezés rekurzív view-jának első (gyökér) lekérdezése
-	 * 
-	 * @var Query
-	 */
-	private $withRecursiveRoot;
-	
-	/**
-	 * WITH RECURSIVE prefixes lekérdezés rekurzív view-jának második (iteratív) lekérdezése
-	 * 
-	 * @var Query
-	 */
-	private $withRecursiveIteration;
 	
 	public function __construct() {}
 	
@@ -250,42 +229,27 @@ class QueryBuilder {
 	}
 	
 	/**
-	 * WITH RECURSIVE prefixes lekérdezés rekurzív view-jának adatai
-	 * 
-	 * @param string $recursiveView
-	 * @param Query $root
-	 * @param Query $iteration
-	 * @return QueryBuilder $this
+	 * Azt az SQL záradékot adja vissza, amely az eredményhalmazon limitet és offsetet állít be.
+	 * Ez nem engine-függő, és nem is szabványos!!! Ez csak akkor kerülhet végrehajtásra,
+	 * ha nem áll DbDialect rendelkezése, például hibajelzésnél.
 	 */
-	public function withRecursive($recursiveView, Query $root, Query $iteration) {
-		$this->withRecursiveView = $recursiveView;
-		$this->withRecursiveRoot = $root;
-		$this->withRecursiveIteration = $iteration;
-		return $this;
+	private function getDefaultLimitClause() {
+		$ret = sprintf(' LIMIT %d ', $this->limit);
+		if (!is_null($this->offset)){
+			$ret .= sprintf(' OFFSET %d ', $this->offset);
+		}
+		return $ret;
 	}
 	
 	/**
-	 * Leszedi az eddig összerakott SELECT mezőket, lehet helyettük újat vagy COUNT()-ot használni inkább
+	 * Returns the string representation of this SQL
 	 * 
-	 * @return QueryBuilder
-	 */
-	public function removeSelectFields() {
-		$this->fieldSql = array();
-		$this->fieldData = array();
-		return $this;
-	}
-
-	/**
-	 * Előállítja a szükséges SQL kifejezést.
-	 *
+	 * @param DbDialect $dialect If not given, the implementation can skip or use a default behaviour where
+	 * 		dialect-dependent is needed.
 	 * @return string
 	 */
-	public function getQueryString() {
-		if (is_null($this->withRecursiveRoot)) {
-			$sql = 'SELECT ';
-		} else {
-			$sql = sprintf('WITH RECURSIVE %s AS (? UNION ALL ?) SELECT', $this->withRecursiveView);
-		}
+	public function convertToString(DbDialect $dialect = null) {
+		$sql = 'SELECT ';
 		if (!empty($this->fieldSql)) {
 			$sql .= implode(', ',$this->fieldSql);
 		} else {
@@ -304,66 +268,23 @@ class QueryBuilder {
 			$sql .= ' ORDER BY ' . implode(', ',$this->orderSql);
 		}
 		if (!is_null($this->limit)) {
-			$sql .= $this->getLimitClause();
+			if (is_null($dialect)) {
+				$sql .= $this->getLimitClause();
+			} else {
+				$sql .= $dialect->getLimitClause($this->limit, $this->offset);
+			}
 		}
 		return $sql;
 	}
 
 	/**
-	 * Azt az SQL záradékot adja vissza, amely az eredményhalmazon limitet és offsetet állít be.
-	 */
-	private function getLimitClause() {
-		$ret = sprintf(' LIMIT %d', $this->limit);
-		if (!is_null($this->offset)){
-			$ret .= sprintf(' OFFSET %d', $this->offset);
-		}
-		return $ret;
-	}
-	
-	/**
-	 * Előállítja az SQL-hez szükséges adatok tömbjét.
-	 *
+	 * Returns the array of the parameters of this SQL
+	 * @param DbDialect $dialect If not given, the implementation can skip or use a default behaviour where
+	 * 		dialect-dependent is needed.
 	 * @return array
 	 */
-	public function getQueryParams() {
-		$withQueries = array();
-		if (!is_null($this->withRecursiveRoot)) {
-			$withQueries []= $this->withRecursiveRoot;
-			$withQueries []= $this->withRecursiveIteration;
-		}
-		return array_merge($withQueries, $this->fieldData,$this->fromData,$this->whereData);
-	}
-	
-	private function getQueryDebugString($indent) {
-		$innerIndent = $indent."\t";
-		if (is_null($this->withRecursiveRoot)) {
-			$sql = $indent . "SELECT\n";
-		} else {
-			$sql = $indent . sprintf( "WITH RECURSIVE %s AS (? UNION ALL ?)\n%sSELECT\n", $this->withRecursiveView, $indent );
-		}
-		if (!empty($this->fieldSql)) {
-			$sql .= $innerIndent . implode( ",\n".$innerIndent, $this->fieldSql ) . "\n";
-		} else {
-			$sql .= $innerIndent . "*\n";
-		}
-		if (!empty($this->fromSql)) {
-			$sql .= $indent . "FROM\n" . $innerIndent . implode( "\n".$innerIndent, $this->fromSql ) . "\n";
-		}
-		if (!empty($this->whereSql)) {
-			$sql .= $indent . "WHERE\n" . $innerIndent . "(" . implode( ")\n".$innerIndent."AND (", $this->whereSql ) . ")\n";
-		}
-		if (!empty($this->groupSql)) {
-			$sql .= $indent . "GROUP BY\n" . $innerIndent . implode( ",\n".$innerIndent, $this->groupSql ) . "\n";
-		}
-		if (!empty($this->orderSql)) {
-			$sql .= $indent . "ORDER BY\n" . $innerIndent . implode( ",\n".$innerIndent, $this->orderSql ) . "\n";
-		}
-		if (!is_null($this->limit)) {
-			$sql .= $indent . $this->getLimitClause() . "\n";
-		}
-		return $sql;
+	public function convertToParamsArray(DbDialect $dialect = null) {
+		return array_merge($this->fieldData, $this-> fromData, $this->whereData);
 	}
 	
 }
-
-?>
