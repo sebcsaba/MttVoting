@@ -67,3 +67,18 @@ function config_merge(array $array1) {
 	}
 	return $result;
 }
+
+/**
+ * Returns the first not null argument.
+ * If there's no such argument, returns null
+ * @param mixed ...
+ * @return mixed
+ */
+function coalesce() {
+	foreach (func_get_args() as $arg) {
+		if (!is_null($arg)) {
+			return $arg;
+		}
+	}
+	return null;
+}

@@ -11,6 +11,8 @@ return config_merge(array(
 		'VotingListingService' => 'VotingListingServiceImpl',
 		'VotingAdminService' => 'VotingAdminServiceImpl',
 		'VotingService' => 'VotingServiceImpl',
+		'DbDialect' => 'MySqlDbDialect',
+		'DbEngine' => 'MySqlDbEngine',
 	),
 	
 	'singletons' => array(
