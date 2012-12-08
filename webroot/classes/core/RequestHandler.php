@@ -3,16 +3,23 @@
 class RequestHandler {
 	
 	/**
+	 * @var UserService
+	 */
+	private $userService;
+	
+	/**
 	 * @var DI
 	 */
 	private $di;
 	
-	public function __construct(DI $di) {
+	public function __construct(UserService $userService, DI $di) {
+		$this->userService = $userService;
 		$this->di = $di;
 	}
 	
 	public function run() {
-		$request = $this->parseRequest();
+		$user = $this->userService->authenticate();
+		$request = $this->parseRequest($user);
 		$forward = $this->parseInitialForward($request);
 		do {
 			$forward = $this->processActionForward($request, $forward);
@@ -23,6 +30,12 @@ class RequestHandler {
 	 * @return Forward
 	 */
 	private function parseInitialForward(Request $request) {
+		if (is_null($request->getUser())) {
+			$return = Url::create('http://www.tolkien.hu/privatevoting/');
+			$location = Url::create('http://www.tolkien.hu/index.php')
+				->option('com_user')->view('login')->return(base64_encode($return));
+			return new RedirectForward($location);
+		}
 		$do = $request->get('do');
 		if (is_null($do)) {
 			$do = 'Init';
@@ -51,8 +64,8 @@ class RequestHandler {
 	/**
 	 * @return Requets
 	 */
-	private function parseRequest() {
-		return new Request($_REQUEST);
+	private function parseRequest(User $user = null) {
+		return new Request($_REQUEST, $user);
 	}
 	
 }

@@ -22,10 +22,9 @@ class ShowAllForAction implements Action {
 	 * @return Forward
 	 */
 	public function serve(Request $request) {
-		$user = $this->userService->authenticate();
 		$request->setData('title','Összes szavazás, amin részt vehetsz');
 		$request->setData('linksToPage', 'Voting');
-		$request->setData('votings', $this->votingListingService->getAllFor($user));
+		$request->setData('votings', $this->votingListingService->getAllFor($request->getUser()));
 		return new PageForward('list');
 	}
 	

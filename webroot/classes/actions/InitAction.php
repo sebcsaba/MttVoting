@@ -3,17 +3,11 @@
 class InitAction implements Action {
 	
 	/**
-	 * @var UserService
-	 */
-	private $userService;
-	
-	/**
 	 * @var VotingListingService
 	 */
 	private $votingListingService;
 
-	public function __construct(UserService $userService, VotingListingService $votingListingService) {
-		$this->userService = $userService;
+	public function __construct(VotingListingService $votingListingService) {
 		$this->votingListingService = $votingListingService;
 	}
 	
@@ -22,10 +16,8 @@ class InitAction implements Action {
 	 * @return Forward
 	 */
 	public function serve(Request $request) {
-		$user = $this->userService->authenticate();
-		$request->setData('username', $user->getLoginName());
-		$request->setData('answerableFor', $this->votingListingService->getAnswerableFor($user));
-		$request->setData('openedOf', $this->votingListingService->getAllOpenedOf($user));
+		$request->setData('answerableFor', $this->votingListingService->getAnswerableFor($request->getUser()));
+		$request->setData('openedOf', $this->votingListingService->getAllOpenedOf($request->getUser()));
 		return new PageForward('index');
 	}
 	

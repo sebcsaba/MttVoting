@@ -92,7 +92,7 @@
 					<div id="position-authentication">
 						<div class="moduletable">
 							<div id="form-logout">
-								<p>Üdv, <?h($request->getData('username'))?>!</p>
+								<p>Üdv, <?h($request->getUser()->getLoginName())?>!</p>
 							</div>
 						</div>
 					</div>

@@ -2,13 +2,32 @@
 
 class Request {
 	
+	/**
+	 * @var array
+	 */
 	private $request;
 	
+	/**
+	 * @var array
+	 */
 	private $data;
 	
-	public function __construct(array $request) {
+	/**
+	 * @var User
+	 */
+	private $user;
+	
+	public function __construct(array $request, User $user = null) {
 		$this->request = $request;
 		$this->data = array();
+		$this->user = $user;
+	}
+	
+	/**
+	 * @return User or null
+	 */
+	public function getUser() {
+		return $this->user;
 	}
 	
 	public function has($key) {
