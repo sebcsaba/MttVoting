@@ -1,2 +1,2 @@
 webroot/temp
-webroot/config/config.php
+webroot/config/config.local.php

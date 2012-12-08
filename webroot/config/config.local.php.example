@@ -1,0 +1,13 @@
+<?php
+
+return config_merge(require_once('config.dev.php'),array(
+
+	'db' => array(
+		'protocol' => 'mysql',
+		'host' => 'localhost',
+		'username' => 'my_username',
+		'password' => 'my_password',
+		'database' => 'privatevoting',
+	),
+
+));

@@ -45,3 +45,25 @@ function func_get_args_but_first() {
 function is_empty($data) {
 	return empty($data);
 }
+
+/**
+ * Merges the given parameters to one associative array. When two
+ * arrays found at the same position, then they will be merged, too.
+ * 
+ * @param array $array1
+ * @param array ...
+ * @return array
+ */
+function config_merge(array $array1) {
+	$result = array();
+	foreach (func_get_args() as $param) {
+		foreach ($param as $key=>$value) {
+			if (is_array($value) && array_key_exists($key, $result) && is_array($result[$key])) {
+				$result[$key] = config_merge($result[$key], $value);
+			} else {
+				$result[$key] = $value;
+			}
+		}
+	}
+	return $result;
+}
