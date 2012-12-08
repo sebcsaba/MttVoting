@@ -8,7 +8,8 @@ spl_autoload_register(array($autoloader,'load'));
 $autoloader->addDirectory('classes');
 
 $config = require_once('config/config.php');
-$di = new DI($config['impl'], array());
+$di = new DI($config['impl'], $config['singletons']);
+$di->setSingleton(DbConnectionParameters::createFromArray($config['db']));
 
 $handler = $di->create('RequestHandler');
 $handler->run();

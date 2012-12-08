@@ -9,6 +9,16 @@ class DbConnectionParameters {
 	private $password;
 	private $database;
 	
+	public static function createFromArray(array $config) {
+		return new self(
+			I($config,'protocol'),
+			I($config,'host'),
+			I($config,'port'),
+			I($config,'username'),
+			I($config,'password'),
+			I($config,'database'));
+	}
+	
 	public function __construct($protocol, $host, $port, $username, $password, $database) {
 		$this->protocol = $protocol;
 		$this->host = $host;

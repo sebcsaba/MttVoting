@@ -10,5 +10,9 @@ return array(
 		'VotingAdminService' => 'VotingAdminServiceImpl',
 		'VotingService' => 'VotingServiceImpl',
 	),
+	
+	'singletons' => array(
+		'DbConnectionParameters',
+	),
 
 );

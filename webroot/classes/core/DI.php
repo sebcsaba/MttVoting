@@ -22,6 +22,13 @@ class DI {
 		return $result;
 	}
 	
+	public function setSingleton($instance, $interfaceName = null) {
+		if (is_null($interfaceName)) {
+			$interfaceName = get_class($instance);
+		}
+		$this->singletons[$interfaceName] = $instance;
+	}
+	
 	public function create($interfaceOrClassName) {
 		if ($interfaceOrClassName=='DI') {
 			return $this;
