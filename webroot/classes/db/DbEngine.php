@@ -92,30 +92,30 @@ abstract class DbEngine {
 	/**
 	 * SQL parancs futtatása a megadott paraméterekkel.
 	 *
-	 * @param Query $query A végrehajtandó SQL parancs egy Query objektumba csomagolva (? jelöléssel a paraméterek helye)
+	 * @param SQL $query A végrehajtandó SQL parancs csomagolva (? jelöléssel a paraméterek helye)
 	 * @return numeric Az érintett sorok száma.
 	 * @throws DbException ha nem sikerült a végrehajtani a parancsot
 	 */
-	public abstract function execNative(Query $query);
+	public abstract function execNative(SQL $query);
 	
 	/**
 	 * A kapott SQL lekérdezés végrehajtása
 	 *
-	 * @param Query $query A végrehajtandó lekérdezés
+	 * @param SQL $query A végrehajtandó lekérdezés
 	 * @return resource Az eredményt tartalmazó objektum. Engine-függő, általában valamilyen resource
 	 * @throws DbException ha nem sikerült a végrehajtani a lekérdezést
 	 */
-	public abstract function queryNative(Query $query);
+	public abstract function queryNative(SQL $query);
 	
 	/**
 	 * Ellenőrzi a kapott eredményt, és ha használható akkor visszaadja
 	 *
 	 * @param resource $result Engine-függő eredményhalmaz, amit a queryNative() adott
-	 * @param Query $query Az eredményt adó lekérdezés, hibakészítéshez
+	 * @param SQL $query Az eredményt adó lekérdezés, hibakészítéshez
 	 * @return resource A kapott paraméter
 	 * @throws DbException Ha hibás az eredmény
 	 */
-	public abstract function testResult($result, Query $query);
+	public abstract function testResult($result, SQL $query);
 	
 	/**
 	 * SQL lekérdezés első sorát adja vissza (mint asszociatív tömöt)

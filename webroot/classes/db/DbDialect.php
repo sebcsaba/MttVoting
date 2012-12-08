@@ -54,11 +54,11 @@ interface DbDialect {
 	/**
 	 * Előkészíti a lekérdezést az adatbázis számára használhatóvá.
 	 *
-	 * @param Query $query Itt még tartalmazhat al-lekérdezéseket, valamint a paraméterek helyén kérdőjelnek kell
+	 * @param SQL $query Itt még tartalmazhat al-lekérdezéseket, valamint a paraméterek helyén kérdőjelnek kell
 	 * 		szerepelnie.
-	 * @return PreparedQuery Ez már csak olyan elemeket tartalmaz, amit az adatbázismotor ténylegesen elfogad.
+	 * @return SQL Ez már csak olyan elemeket tartalmaz, amit az adatbázismotor ténylegesen elfogad.
 	 */
-	public function prepareQuery(Query $query);
+	public function prepareQuery(SQL $query);
 	
 	/**
 	 * Átalakítja az eredeti (adatbázisból kapott) formátumú értéket a megadott típusjelzés szerint 
