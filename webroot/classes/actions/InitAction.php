@@ -2,13 +2,19 @@
 
 class InitAction implements Action {
 	
+	/**
+	 * @var UserService
+	 */
 	private $userService;
+	
+	/**
+	 * @var VotingListingService
+	 */
 	private $votingListingService;
 
-	public function __construct() {
-		// TODO use DI
-		$this->userService = new DummyUserService();
-		$this->votingListingService = new VotingListingServiceImpl(new Database());
+	public function __construct(UserService $userService, VotingListingService $votingListingService) {
+		$this->userService = $userService;
+		$this->votingListingService = $votingListingService;
 	}
 	/**
 	 * @param Request $request

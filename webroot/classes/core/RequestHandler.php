@@ -2,6 +2,15 @@
 
 class RequestHandler {
 	
+	/**
+	 * @var DI
+	 */
+	private $di;
+	
+	public function __construct(DI $di) {
+		$this->di = $di;
+	}
+	
 	public function run() {
 		$request = $this->parseRequest();
 		$forward = $this->parseInitialForward($request);
@@ -31,7 +40,7 @@ class RequestHandler {
 			return null;
 		} else if ($forward instanceof ActionForward) {
 			$className = $forward->getClassName();
-			$action = new $className(); // TODO implement DI here
+			$action = $this->di->create($className);
 			return $action->serve($request);
 		}
 	}
