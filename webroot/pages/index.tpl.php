@@ -49,7 +49,7 @@
 						<div class="moduletable">
 							<ul id="mainlevel">
 								<? foreach ($request->getData('answerableFor') as $voting) { ?>
-									<li><a href="javascript:openPage('Show',<?h($voting->getId())?>)"><?h($voting->getTitle())?></a></li>
+									<li><a href="javascript:openPage('Voting',<?h($voting->getId())?>)"><?h($voting->getTitle())?></a></li>
 								<? } ?>
 								<li><a href="javascript:openPage('AllFor')">- Összes -</a></li>
 							</ul>
