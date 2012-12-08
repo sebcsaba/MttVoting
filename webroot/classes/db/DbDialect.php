@@ -58,9 +58,8 @@ interface DbDialect {
 	 * @param string $type Értéke a primitív adattípusok lehetséges értékei: boolean, integer, float, string, enum, datetime
 	 * @param mixed $value Az eredeti érték, amit az adatbáziscellából kiolvastunk
 	 * @return mixed A megfelelő típusra átalakított érték (rendre: php bool, int, float, string, string, DateTime)
-	 * @throws IncompatibleClassException Ha az érték nem megfelelő a megadott típusnak
+	 * @throws DbException Ha az érték nem megfelelő a megadott típusnak
 	 * @throws DbException Ha ismeretlen típusra kellene konvertálni
-	 * @see PrimitiveTypeConverter->convertPrimitive()
 	 */
 	public function convertPrimitive($type, $value);
 	

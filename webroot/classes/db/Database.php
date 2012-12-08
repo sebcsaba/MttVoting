@@ -17,7 +17,7 @@ class Database extends LowDatabase {
 	 * @throws DbException Ha nem sikerült a lekérdezést végrehajtani.
 	 * @throws DbException Ha üres eredményt kaptunk, és $nullOnEmpty hamis.
 	 */
-	public function queryFirstRow(SQL $query, $nullOnEmpty=false) {
+	public function queryRow(SQL $query, $nullOnEmpty=false) {
 		$result = $this->queryNative($query);
 		$row = $this->engine->fetchFirstRowOnly($result);
 		if (!is_null($row)) {
