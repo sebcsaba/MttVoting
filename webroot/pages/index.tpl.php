@@ -66,7 +66,7 @@
 					<div id="thcm-functions"></div>
 					<div id="thcm-category-highlights">
 						<ul id="thcm-category-contents">
-							<li>
+							<li id="central-content-for-privatevoting">
 								<div class="thcm-fp-title">
 									Szavazás használata
 								</div>

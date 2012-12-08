@@ -23,8 +23,11 @@ class RequestHandler {
 	 * @return Forward
 	 */
 	private function parseInitialForward(Request $request) {
-		// TODO implement: parse $_REQUEST to initial Forward
-		return new ActionForward('InitAction');
+		$do = $request->get('do');
+		if (is_null($do)) {
+			$do = 'Init';
+		}
+		return new ActionForward($do.'Action');
 	}
 	
 	/**

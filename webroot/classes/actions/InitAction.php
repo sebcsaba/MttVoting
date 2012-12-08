@@ -16,6 +16,7 @@ class InitAction implements Action {
 		$this->userService = $userService;
 		$this->votingListingService = $votingListingService;
 	}
+	
 	/**
 	 * @param Request $request
 	 * @return Forward
