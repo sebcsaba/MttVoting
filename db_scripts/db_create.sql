@@ -1,17 +1,17 @@
 CREATE TABLE privatevoting_voting (
 	id INT PRIMARY KEY NOT NULL auto_increment,
 	creator_user_id INT NOT NULL,
-	title VARCHAR NOT NULL,
-	description VARCHAR NOT NULL,
-	start_date DATE NOT NULL,
-	stop_date DATE,
+	title VARCHAR(8000) NOT NULL,
+	description TEXT NOT NULL,
+	start_date DATETIME NOT NULL,
+	stop_date DATETIME,
 	private BOOL NOT NULL
 );
 
 CREATE TABLE privatevoting_answer (
 	id INT PRIMARY KEY NOT NULL auto_increment,
 	fk_voting INT NOT NULL REFERENCES voting(id),
-	title VARCHAR NOT NULL
+	title VARCHAR(8000) NOT NULL
 );
 
 CREATE TABLE privatevoting_participant (
