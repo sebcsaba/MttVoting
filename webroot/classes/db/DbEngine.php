@@ -35,8 +35,7 @@ abstract class DbEngine {
 			throw new DbException('Cannot connect because only '.implode(',',$supported).' protocol'.(count($supported)>1 ? 's are' : ' is').' supported.',$params->__toString());
 		}
 		$this->connect($params);
-		$initializer = $this->dialect->getConnectionInitializerQuery();
-		if (!empty($initializer)) {
+		foreach ($this->dialect->getConnectionInitializerQueries() as $initializer) {
 			$this->execPrimitive($initializer);
 		}
 	}

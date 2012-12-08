@@ -29,11 +29,11 @@ interface DbDialect {
 	public function getSqlRollbackTransaction();
 	
 	/**
-	 * Azt az SQL stringet adja vissza, amelyet a kapcsolat inicializálásakor kell futtatnunk.
+	 * Azokat az SQL stringeket adja vissza, amelyet a kapcsolat inicializálásakor kell futtatnunk.
 	 *
-	 * @return string
+	 * @return array of strings
 	 */
-	public function getConnectionInitializerQuery();
+	public function getConnectionInitializerQueries();
 	
 	/**
 	 * Azt az SQL záradékot adja vissza, amely az eredményhalmazon limitet és offsetet állít be.

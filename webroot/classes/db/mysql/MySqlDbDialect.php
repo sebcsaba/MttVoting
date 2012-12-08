@@ -30,13 +30,15 @@ class MySqlDbDialect implements DbDialect {
 	}
 	
 	/**
-	 * Azt az SQL stringet adja vissza, amelyet a kapcsolat inicializálásako kell futtatnunk.
+	 * Azokat az SQL stringeket adja vissza, amelyet a kapcsolat inicializálásakor kell futtatnunk.
 	 *
-	 * @return string
+	 * @return array of strings
 	 */
-	public function getConnectionInitializerQuery() {
-		return "SET NAMES utf8; SET AUTOCOMMIT=0";
-		
+	public function getConnectionInitializerQueries() {
+		return array(
+			'SET NAMES utf8',
+			'SET AUTOCOMMIT=0',
+		);
 	}
 	
 	/**
