@@ -44,7 +44,7 @@ abstract class DbEngine {
 	/**
 	 * A támogatott protokollok listája
 	 *
-	 * @return array
+	 * @return array(strings)
 	 */
 	protected abstract function getSupportedProtocols();
 	
@@ -92,20 +92,20 @@ abstract class DbEngine {
 	/**
 	 * SQL parancs futtatása a megadott paraméterekkel.
 	 *
-	 * @param SQL $query A végrehajtandó SQL parancs csomagolva (? jelöléssel a paraméterek helye)
+	 * @param NativeSQL $query A végrehajtandó SQL parancs, már előkészítve az engine-nek.
 	 * @return numeric Az érintett sorok száma.
 	 * @throws DbException ha nem sikerült a végrehajtani a parancsot
 	 */
-	public abstract function execNative(SQL $query);
+	public abstract function execNative(NativeSQL $query);
 	
 	/**
-	 * A kapott SQL lekérdezés végrehajtása
+	 * A kapott, engine-függővé alakított SQL lekérdezés végrehajtása
 	 *
-	 * @param SQL $query A végrehajtandó lekérdezés
+	 * @param NativeSQL $query A végrehajtandó lekérdezés, már előkészítve az engine-nek.
 	 * @return resource Az eredményt tartalmazó objektum. Engine-függő, általában valamilyen resource
 	 * @throws DbException ha nem sikerült a végrehajtani a lekérdezést
 	 */
-	public abstract function queryNative(SQL $query);
+	public abstract function queryNative(NativeSQL $query);
 	
 	/**
 	 * Ellenőrzi a kapott eredményt, és ha használható akkor visszaadja

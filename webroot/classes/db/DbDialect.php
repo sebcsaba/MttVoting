@@ -29,14 +29,6 @@ interface DbDialect {
 	public function getSqlRollbackTransaction();
 	
 	/**
-	 * Azt az SQL stringet adja vissza, amelyet tábla kiürítése esetén kell futtatnunk. Ha a táblához szekvencia
-	 * tartozik, azt is nullázza le az utasítás.
-	 * 
-	 * @param string $tableName
-	 */
-	public function getSqlTruncateTable($tableName);
-	
-	/**
 	 * Azt az SQL stringet adja vissza, amelyet a kapcsolat inicializálásakor kell futtatnunk.
 	 *
 	 * @return string
@@ -54,7 +46,7 @@ interface DbDialect {
 	/**
 	 * Előkészíti a lekérdezést az adatbázis számára használhatóvá.
 	 *
-	 * @param SQL $query Itt még tartalmazhat al-lekérdezéseket, valamint a paraméterek helyén kérdőjelnek kell
+	 * @param NativeSQL $query Itt még tartalmazhat al-lekérdezéseket, valamint a paraméterek helyén kérdőjelnek kell
 	 * 		szerepelnie.
 	 * @return SQL Ez már csak olyan elemeket tartalmaz, amit az adatbázismotor ténylegesen elfogad.
 	 */
