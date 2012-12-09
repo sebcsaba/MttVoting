@@ -1,7 +1,17 @@
 <?php
 
 interface VotingListingService {
-
+	
+	/**
+	 * Returns the Voting with the given id,
+	 * if this voting is created by the given user.
+	 * 
+	 * @param int $id
+	 * @param User $user
+	 * @return Voting or null
+	 */
+	public function findOf($id, User $user);
+	
 	/**
 	 * Returns all opened Voting of the given User.
 	 * (The creator of the returned items is the given.)
@@ -20,6 +30,16 @@ interface VotingListingService {
 	 * @return Voting[]
 	 */
 	public function getAllOf(User $user, $limit = 10);
+	
+	/**
+	 * Returns the Voting with the given id,
+	 * if the given user is participant of this voting.
+	 * 
+	 * @param int $id
+	 * @param User $user
+	 * @return Voting or null
+	 */
+	public function findFor($id, User $user);
 	
 	/**
 	 * Returns all answerable Votings of the given User.

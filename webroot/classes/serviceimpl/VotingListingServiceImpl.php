@@ -3,6 +3,29 @@
 class VotingListingServiceImpl extends DbServiceBase implements VotingListingService {
 	
 	/**
+	 * @var UserService
+	 */
+	private $userService;
+	
+	public function __construct(Database $db, UserService $userService) {
+		parent::__construct($db);
+		$this->userService = $userService;
+	}
+	
+	/**
+	 * Returns the Voting with the given id,
+	 * if this voting is created by the given user.
+	 * 
+	 * @param int $id
+	 * @param User $user
+	 * @return Voting or null
+	 */
+	public function findOf($id, User $user) {
+		$query = $this->createQueryOf($user)->where('id=?', $id);
+		return $this->loadFirstVoting($query);
+	}
+	
+	/**
 	 * Returns all opened Voting of the given User.
 	 * (The creator of the returned items is the given.)
 	 *
@@ -25,6 +48,19 @@ class VotingListingServiceImpl extends DbServiceBase implements VotingListingSer
 	public function getAllOf(User $user, $limit = 10) {
 		$query = $this->createQueryOf($user)->limit($limit);
 		return $this->loadVotings($query);
+	}
+	
+	/**
+	 * Returns the Voting with the given id,
+	 * if the given user is participant of this voting.
+	 * 
+	 * @param int $id
+	 * @param User $user
+	 * @return Voting or null
+	 */
+	public function findFor($id, User $user) {
+		$query = $this->createQueryFor($user)->where('v.id=?', $id);
+		return $this->loadFirstVoting($query);
 		
 	}
 	
@@ -80,8 +116,56 @@ class VotingListingServiceImpl extends DbServiceBase implements VotingListingSer
 	private function loadVotings(QueryBuilder $query) {
 		$result = array();
 		foreach ($this->db->query($query) as $row) {
-			$result []= new Voting($row['id'], $row['creator_user_id'], $row['title'], $row['description'], 
-				$row['start_date'], $row['stop_date'], $row['private'], array(), array());
+			$result []= $this->createVoting($row, array(), array());
+		}
+		return $result;
+	}
+
+	/**
+	 * Create a full Voting for the first row of the result.
+	 * Returns null, if the resultset is empty.
+	 * 
+	 * @param array $row
+	 * @return Voting or null
+	 */
+	private function loadFirstVoting(QueryBuilder $query) {
+		$row = $this->db->queryRow($query, true);
+		if (is_null($row)) {
+			return null;
+		} else {
+			$answerQuery = QueryBuilder::create()->from('privatevoting_answer')->where('fk_voting=?', $row['id']);
+			$answers = $this->db->queryMapping($answerQuery,'id','title');
+			$participants = $this->loadParticipants($row['id']);
+			return $this->createVoting($row, $answers, $participants);
+		}
+	}
+	
+	/**
+	 * Create a full Voting.
+	 * 
+	 * @param array $row (fieldname=>value)
+	 * @param array $answers (id=>string)
+	 * @param array $participants (id=>Participant)
+	 * @return Voting
+	 */
+	private function createVoting(array $row, array $answers, array $participants) {
+		return new Voting($row['id'], $row['creator_user_id'], $row['title'], $row['description'], 
+				$row['start_date'], $row['stop_date'], $row['private'], $answers, $participants);
+	}
+	
+	/**
+	 * Returns the participants for the given voting
+	 * 
+	 * @param int $votingId
+	 * @return (id=>Participant)
+	 */
+	private function loadParticipants($votingId) {
+		$query = QueryBuilder::create()->from('privatevoting_participant')->where('fk_voting=?', $votingId);
+		$result = array();
+		foreach ($this->db->query($query) as $row) {
+			$id = $row['id'];
+			$user = $this->userService->findUserById($row['user_id']);
+			$result[$id] = new Participant($id, $user, $row['voted']);
 		}
 		return $result;
 	}
