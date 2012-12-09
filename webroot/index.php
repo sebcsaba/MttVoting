@@ -7,9 +7,11 @@ $autoloader = new Autoloader('temp/autoload.cache.dat');
 spl_autoload_register(array($autoloader,'load'));
 $autoloader->addDirectory('classes');
 
-$config = require_once('config/config.php');
-$di = new DI($config['impl'], $config['singletons']);
-$di->setSingleton(DbConnectionParameters::createFromArray($config['db']));
+$config = new Config(require_once('config/config.php'));
+
+$di = new DI($config->get('impl'), $config->get('singletons'));
+$di->setSingleton($config);
+$di->setSingleton(DbConnectionParameters::createFromArray($config->get('db')));
 
 $handler = $di->create('RequestHandler');
 $handler->run();
