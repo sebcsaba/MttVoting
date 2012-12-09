@@ -1,6 +1,6 @@
 <?php
 
-class ShowVotingAction implements Action {
+class VoteAction implements Action {
 	
 	/**
 	 * @var VotingListingService
@@ -16,17 +16,18 @@ class ShowVotingAction implements Action {
 	 * @return Forward
 	 */
 	public function serve(Request $request) {
-		$id = $request->get('id');
+		$id = $request->get('voting_id');
 		$voting = $this->votingListingService->findFor($id, $request->getUser());
-		$request->setData('voting', $voting);
-		if ($voting==null) {
+		if (is_null($voting)) {
 			$request->setData('message', 'Nincs elérhető szavazás a megadott azonosítóval');
 			return new PageForward('error');
-		} else if (is_null($voting->getStopDate())) {
-			return new PageForward('vote');
-		} else {
-			return new PageForward('result');
 		}
+		$a = $request->get('a');
+		if (!array_key_exists($a, $voting->getAnswers())) {
+			$request->setData('message', 'Nem megfelelő választ adott meg!');
+			return new PageForward('error');
+		}
+		return new ActionForward('ShowAllForAction');
 	}
 	
 }

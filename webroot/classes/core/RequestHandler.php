@@ -41,7 +41,7 @@ class RequestHandler {
 			$this->database->commit();
 		} catch (Exception $e) {
 			$this->database->rollback();
-			header('X-Error: '.$e->getMessage());
+			header('X-Error: '.$this->encodeHeader($forward->getMessage()));
 			throw $e;
 		}
 	}
@@ -73,6 +73,16 @@ class RequestHandler {
 	 */
 	private function parseRequest(User $user = null) {
 		return new Request(getallheaders(), $_REQUEST, $user);
+	}
+	
+	/**
+	 * Encodes the given string to quoted-printable
+	 * 
+	 * @param string $string
+	 * @return string
+	 */
+	private function encodeHeader($string) {
+		return '=?UTF-8?Q?'.quoted_printable_encode($string).'?=';
 	}
 	
 }
