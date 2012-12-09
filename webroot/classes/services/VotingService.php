@@ -12,11 +12,10 @@ interface VotingService {
 	public function vote(Voting $voting, User $user, $answerId);
 	
 	/**
-	 * Get results of the given voting.
-	 *
-	 * @param Voting $voting
-	 * @return ??TODO??
+	 * Checks, if the voting is opened, and answerable for the given user
+	 * 
+	 * @return boolean
 	 */
-	public function getResult(Voting $voting);
+	public function isVotingAnswerableForUser(Voting $voting, User $user);
 	
 }

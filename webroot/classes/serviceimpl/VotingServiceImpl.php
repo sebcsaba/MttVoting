@@ -10,8 +10,8 @@ class VotingServiceImpl extends DbServiceBase implements VotingService {
 	 * @param int $answerId
 	 */
 	public function vote(Voting $voting, User $user, $answerId) {
-		$this->checkIfVotingAndAnswerIsOpened($voting, $answerId);
 		$participantId = $this->checkIfVotingIsAnswerableForUser($voting, $user);
+		$this->checkIfAnswerIsValidForVoting($voting, $answerId);
 		
 		$update = UpdateBuilder::create()->update('privatevoting_participant')
 			->where('id=?', $participantId)
@@ -27,8 +27,7 @@ class VotingServiceImpl extends DbServiceBase implements VotingService {
 		$this->db->exec($insert);
 	}
 	
-	private function checkIfVotingAndAnswerIsOpened(Voting $voting, $answerId) {
-		if (!is_null($voting->getStopDate())) throw new Exception('voting is closed');
+	private function checkIfAnswerIsValidForVoting(Voting $voting, $answerId) {
 		$query = QueryBuilder::create()->select('fk_voting')->from('privatevoting_answer')->where('id=?',$answerId);
 		if ($this->db->queryCell($query)!=$voting->getId()) throw new Exception('invalid answer id');
 	}
@@ -37,6 +36,7 @@ class VotingServiceImpl extends DbServiceBase implements VotingService {
 	 * @return int participant id
 	 */
 	private function checkIfVotingIsAnswerableForUser(Voting $voting, User $user) {
+		if (!is_null($voting->getStopDate())) throw new Exception('voting is closed');
 		$query = QueryBuilder::create()->from('privatevoting_participant')
 			->where('fk_voting=?', $voting->getId())
 			->where('user_id=?', $user->getUserId());
@@ -47,13 +47,17 @@ class VotingServiceImpl extends DbServiceBase implements VotingService {
 	}
 	
 	/**
-	 * Get results of the given voting.
-	 *
-	 * @param Voting $voting
-	 * @return ??TODO??
+	 * Checks, if the voting is opened, and answerable for the given user
+	 * 
+	 * @return boolean
 	 */
-	public function getResult(Voting $voting) {
-		// TODO
+	public function isVotingAnswerableForUser(Voting $voting, User $user) {
+		try {
+			$this->checkIfVotingIsAnswerableForUser($voting, $user);
+			return true;
+		} catch (Exception $ex) {
+			return false;
+		}
 	}
 	
 }

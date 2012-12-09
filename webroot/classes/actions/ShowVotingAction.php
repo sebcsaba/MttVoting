@@ -7,8 +7,14 @@ class ShowVotingAction implements Action {
 	 */
 	private $votingListingService;
 	
-	public function __construct(VotingListingService $votingListingService) {
+	/**
+	 * @var VotingService
+	 */
+	private $votingService;
+	
+	public function __construct(VotingListingService $votingListingService, VotingService $votingService) {
 		$this->votingListingService = $votingListingService;
+		$this->votingService = $votingService;
 	}
 	
 	/**
@@ -22,8 +28,10 @@ class ShowVotingAction implements Action {
 		if ($voting==null) {
 			$request->setData('message', 'Nincs elérhető szavazás a megadott azonosítóval');
 			return new PageForward('error');
-		} else if (is_null($voting->getStopDate())) {
+		} else if ($this->votingService->isVotingAnswerableForUser($voting, $request->getUser())) {
 			return new PageForward('vote');
+		} else if (is_null($voting->getStopDate())) {
+			return new PageForward('voted');
 		} else {
 			return new PageForward('result');
 		}
