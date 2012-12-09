@@ -65,6 +65,9 @@ class RequestHandler {
 			$className = $forward->getClassName();
 			$action = $this->di->create($className);
 			return $action->serve($request);
+		} else if ($forward instanceof ErrorForward) {
+			header('X-Error: '.$this->encodeHeader($forward->getMessage()));
+			return null;
 		}
 	}
 	
