@@ -2,11 +2,14 @@
 
 return config_merge(array(
 
+	'url' => '',
+
 	'db' => array(
 		'protocol' => 'mysql',
 	),
 
 	'impl' => array(
+		'ApplicationHandler' => 'ApplicationHandlerImpl',
 		'UserService' => 'TohuUserService',
 		'VotingListingService' => 'VotingListingServiceImpl',
 		'VotingAdminService' => 'VotingAdminServiceImpl',

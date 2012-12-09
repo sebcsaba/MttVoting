@@ -5,6 +5,11 @@ class Request {
 	/**
 	 * @var array
 	 */
+	private $headers;
+	
+	/**
+	 * @var array
+	 */
 	private $request;
 	
 	/**
@@ -17,7 +22,11 @@ class Request {
 	 */
 	private $user;
 	
-	public function __construct(array $request, User $user = null) {
+	public function __construct(array $headers, array $request, User $user = null) {
+		$this->headers = array();
+		foreach ($headers as $name=>$value) {
+			$this->headers[strtolower($name)] = $value;
+		}
 		$this->request = $request;
 		$this->data = array();
 		$this->user = $user;
@@ -28,6 +37,14 @@ class Request {
 	 */
 	public function getUser() {
 		return $this->user;
+	}
+	
+	public function isAjax() {
+		return strtolower(I(getallheaders(),'X-Requested-With'))==strtolower('XMLHttpRequest');
+	}
+	
+	public function getHeader($name) {
+		return I($this->headers, $name);
 	}
 	
 	public function has($key) {

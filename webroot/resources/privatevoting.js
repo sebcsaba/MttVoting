@@ -3,8 +3,13 @@ function openPage(page,id) {
 		data: {
 			'do':'Show'+page
 		},
-		success: function(data) {
-			$('#central-content-for-privatevoting').html(data);
+		success: function(data, status, xhr) {
+			var redirect = xhr.getResponseHeader("X-Location");
+			if (redirect) {
+				document.location = redirect;
+			} else {
+				$('#central-content-for-privatevoting').html(data);
+			}
 		},
 		error: function(data) {
 			alert('error: '+data);

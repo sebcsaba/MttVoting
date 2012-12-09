@@ -8,39 +8,30 @@ class RequestHandler {
 	private $userService;
 	
 	/**
+	 * @var ApplicationHandler
+	 */
+	private $applicationHandler;
+	
+	/**
 	 * @var DI
 	 */
 	private $di;
 	
-	public function __construct(UserService $userService, DI $di) {
+	public function __construct(UserService $userService, ApplicationHandler $applicationHandler, DI $di) {
 		$this->userService = $userService;
+		$this->applicationHandler = $applicationHandler;
 		$this->di = $di;
 	}
 	
 	public function run() {
+		// TODO start transaction
 		$user = $this->userService->authenticate();
 		$request = $this->parseRequest($user);
-		$forward = $this->parseInitialForward($request);
+		$forward = $this->applicationHandler->parseInitialForward($request);
 		do {
 			$forward = $this->processActionForward($request, $forward);
 		} while (!is_null($forward));
-	}
-	
-	/**
-	 * @return Forward
-	 */
-	private function parseInitialForward(Request $request) {
-		if (is_null($request->getUser())) {
-			$return = Url::create('http://www.tolkien.hu/privatevoting/');
-			$location = Url::create('http://www.tolkien.hu/index.php')
-				->option('com_user')->view('login')->return(base64_encode($return));
-			return new RedirectForward($location);
-		}
-		$do = $request->get('do');
-		if (is_null($do)) {
-			$do = 'Init';
-		}
-		return new ActionForward($do.'Action');
+		// TODO commit/rollback transaction
 	}
 	
 	/**
@@ -49,7 +40,11 @@ class RequestHandler {
 	 */
 	private function processActionForward(Request $request, Forward $forward) {
 		if ($forward instanceof RedirectForward) {
-			header('Location: '.$forward->getLocation());
+			if ($request->isAjax()) {
+				header('X-Location: '.$forward->getLocation());
+			} else {
+				header('Location: '.$forward->getLocation());
+			}
 			return null;
 		} else if ($forward instanceof PageForward) {
 			require_once('pages/'.$forward->getPage().'.tpl.php');
@@ -65,7 +60,7 @@ class RequestHandler {
 	 * @return Requets
 	 */
 	private function parseRequest(User $user = null) {
-		return new Request($_REQUEST, $user);
+		return new Request(getallheaders(), $_REQUEST, $user);
 	}
 	
 }
