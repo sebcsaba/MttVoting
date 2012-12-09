@@ -7,8 +7,14 @@ class VoteAction implements Action {
 	 */
 	private $votingListingService;
 	
-	public function __construct(VotingListingService $votingListingService) {
+	/**
+	 * @var VotingService
+	 */
+	private $votingService;
+	
+	public function __construct(VotingListingService $votingListingService, VotingService $votingService) {
 		$this->votingListingService = $votingListingService;
+		$this->votingService = $votingService;
 	}
 	
 	/**
@@ -16,18 +22,18 @@ class VoteAction implements Action {
 	 * @return Forward
 	 */
 	public function serve(Request $request) {
-		$id = $request->get('voting_id');
+		$id = $request->get('id');
 		$voting = $this->votingListingService->findFor($id, $request->getUser());
 		if (is_null($voting)) {
 			$request->setData('message', 'Nincs elérhető szavazás a megadott azonosítóval');
 			return new PageForward('error');
 		}
-		$a = $request->get('a');
-		if (!array_key_exists($a, $voting->getAnswers())) {
-			$request->setData('message', 'Nem megfelelő választ adott meg!');
-			return new PageForward('error');
+		$answerId = $request->get('answer_id');
+		if (!array_key_exists($answerId, $voting->getAnswers())) {
+			return new ErrorForward('Nem megfelelő választ adott meg!');
 		}
-		return new ActionForward('ShowAllForAction');
+		$this->votingService->vote($voting, $request->getUser(), $answerId);
+		return new ActionForward('ShowVotingAction');
 	}
 	
 }
