@@ -15,7 +15,7 @@ class VotingServiceImpl extends DbServiceBase implements VotingService {
 		$query = UpdateBuilder::create()->update('privatevoting_participant')
 			->where('id=?', $participantId)
 			->set('voted', true);
-		$this->db->update($query);
+		$this->db->exec($query);
 		$voteRow = array(
 			'fk_voting' => $voting->getId(),
 			'fk_answer' => $answerId,

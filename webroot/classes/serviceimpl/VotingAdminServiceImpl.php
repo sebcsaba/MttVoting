@@ -36,7 +36,7 @@ class VotingAdminServiceImpl extends DbServiceBase implements VotingAdminService
 			->set('title',$voting->getTitle())
 			->set('description',$voting->getDescription())
 			->where('id=?', $voting->getId());
-		$this->db->update($query);
+		$this->db->exec($query);
 
 		$query = QueryBuilder::create()->select('user_id')->from('privatevoting_participant')
 			->where('fk_voting=?', $voting->getId());
@@ -58,22 +58,22 @@ class VotingAdminServiceImpl extends DbServiceBase implements VotingAdminService
 			}
 		}
 		// $oldParticipandUIDs contains only ids of removable participants
-		$query = UpdateBuilder::create()->deleteFrom('privatevoting_participant')
+		$query = DeleteBuilder::create()->from('privatevoting_participant')
 			->where('fk_voting=?', $voting->getId())
 			->where('user_id IN (?)', join(',', $oldParticipandUIDs))
 			->where('NOT voted');
-		$this->db->update($query);
+		$this->db->exec($query);
 	}
 	
 	public function remove(Voting $voting) {
-		$query = UpdateBuilder::create()->deleteFrom('privatevoting_answer')->where('fk_voting=?', $voting->getId());
-		$this->db->update($query);
-		$query = UpdateBuilder::create()->deleteFrom('privatevoting_participant')->where('fk_voting=?', $voting->getId());
-		$this->db->update($query);
-		$query = UpdateBuilder::create()->deleteFrom('privatevoting_vote')->where('fk_voting=?', $voting->getId());
-		$this->db->update($query);
-		$query = UpdateBuilder::create()->deleteFrom('privatevoting_voting')->where('id=?', $voting->getId());
-		$this->db->update($query);
+		$query = DeleteBuilder::create()->from('privatevoting_answer')->where('fk_voting=?', $voting->getId());
+		$this->db->exec($query);
+		$query = DeleteBuilder::create()->from('privatevoting_participant')->where('fk_voting=?', $voting->getId());
+		$this->db->exec($query);
+		$query = DeleteBuilder::create()->from('privatevoting_vote')->where('fk_voting=?', $voting->getId());
+		$this->db->exec($query);
+		$query = DeleteBuilder::create()->from('privatevoting_voting')->where('id=?', $voting->getId());
+		$this->db->exec($query);
 	}
 	
 	public function close(Voting $voting) {
@@ -81,7 +81,7 @@ class VotingAdminServiceImpl extends DbServiceBase implements VotingAdminService
 			$query = UpdateBuilder::create()->update('privatevoting_voting')
 				->setNative('stop_date', 'NOW()')
 				->where('id=?', $voting->getId());
-			$this->db->update($query);
+			$this->db->exec($query);
 		}
 	}
 	
