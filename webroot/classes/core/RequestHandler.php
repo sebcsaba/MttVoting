@@ -13,25 +13,36 @@ class RequestHandler {
 	private $applicationHandler;
 	
 	/**
+	 * @var Database
+	 */
+	private $database;
+	
+	/**
 	 * @var DI
 	 */
 	private $di;
 	
-	public function __construct(UserService $userService, ApplicationHandler $applicationHandler, DI $di) {
+	public function __construct(UserService $userService, ApplicationHandler $applicationHandler, Database $database, DI $di) {
 		$this->userService = $userService;
 		$this->applicationHandler = $applicationHandler;
+		$this->database = $database;
 		$this->di = $di;
 	}
 	
 	public function run() {
-		// TODO start transaction
-		$user = $this->userService->authenticate();
-		$request = $this->parseRequest($user);
-		$forward = $this->applicationHandler->parseInitialForward($request);
-		do {
-			$forward = $this->processActionForward($request, $forward);
-		} while (!is_null($forward));
-		// TODO commit/rollback transaction
+		try {
+			$this->database->startTransaction();
+			$user = $this->userService->authenticate();
+			$request = $this->parseRequest($user);
+			$forward = $this->applicationHandler->parseInitialForward($request);
+			do {
+				$forward = $this->processActionForward($request, $forward);
+			} while (!is_null($forward));
+			$this->database->commit();
+		} catch (Exception $e) {
+			$this->database->rollback();
+			throw $e;
+		}
 	}
 	
 	/**
