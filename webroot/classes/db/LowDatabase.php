@@ -13,7 +13,7 @@ class LowDatabase {
 	 *
 	 * @var DbEngine
 	 */
-	private $engine;
+	protected $engine;
 	
 	/**
 	 * Adatbázis-kapcsolat létrehozása
@@ -99,7 +99,7 @@ class LowDatabase {
 	 * @return resource Az eredményhalmaz. Engine-től függ hogy milyen válaszobjektumot kapunk
 	 * @throws DbException Ha nem sikerült a lekérdezést végrehajtani.
 	 */
-	private function queryNative(SQL $query) {
+	protected function queryNative(SQL $query) {
 		$preparedQuery = $this->engine->getDialect()->prepareQuery($query);
 		$result = $this->engine->queryNative($preparedQuery);
 		return $this->engine->testResult($result,$preparedQuery);
