@@ -28,8 +28,12 @@ class MySqlDbResultSet implements DbResultSet {
 	
 	public function rewind() {
 		$this->position = 0;
-		mysql_data_seek($this->result, 0);
-		$this->row_data = mysql_fetch_assoc($this->result);
+		if (mysql_num_rows($this->result)>0) {
+			mysql_data_seek($this->result, 0);
+			$this->row_data = mysql_fetch_assoc($this->result);
+		} else {
+			$this->row_data = false;
+		}
 	}
 	
 	public function valid() {
