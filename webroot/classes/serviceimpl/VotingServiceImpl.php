@@ -20,9 +20,7 @@ class VotingServiceImpl extends DbServiceBase implements VotingService {
 		
 		$insert = InsertBuilder::create()->into('privatevoting_vote')
 			->set('fk_voting', $voting->getId())
-			->set('fk_answer', $answerId)
-			->set('fk_participant', null);
-		
+			->set('fk_answer', $answerId);
 		if (!$voting->getPrivate()) {
 			$insert->set('fk_participant', $participantId);
 		}
