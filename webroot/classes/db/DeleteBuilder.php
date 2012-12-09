@@ -10,6 +10,13 @@ class DeleteBuilder extends SQLBuilder {
 	private $table;
 	
 	/**
+	 * @return DeleteBuilder
+	 */
+	public static function create() {
+		return new self();
+	}
+	
+	/**
 	 * Beállítja hogy melyik táblából fogunk törölni
 	 * 
 	 * @param string $table

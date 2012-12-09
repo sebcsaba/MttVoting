@@ -31,6 +31,17 @@ class UpdateBuilder extends SQLBuilder {
 	}
 	
 	/**
+	 * Egy WHERE clause-t ad a lekérdezéshez. (Ezek konjunkciója lesz a teljes feltétel.)
+	 *
+	 * @param string $where A feltételkifejezés
+	 * @param mixed... $data A táblakifejezések előállításához szükséges paraméterek, vararg paraméterként
+	 * @return UpdateBuilder $this
+	 */
+	public function where($where, $data=null) {
+		return parent::where($where, $data);
+	}
+	
+	/**
 	 * Beállítja hogy melyik tábla kerül frissítére.
 	 * 
 	 * @param string $table

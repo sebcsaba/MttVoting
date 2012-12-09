@@ -75,6 +75,17 @@ class QueryBuilder extends SQLBuilder {
 	}
 	
 	/**
+	 * Egy WHERE clause-t ad a lekérdezéshez. (Ezek konjunkciója lesz a teljes feltétel.)
+	 *
+	 * @param string $where A feltételkifejezés
+	 * @param mixed... $data A táblakifejezések előállításához szükséges paraméterek, vararg paraméterként
+	 * @return QueryBuilder $this
+	 */
+	public function where($where, $data=null) {
+		return parent::where($where, $data);
+	}
+	
+	/**
 	 * Egy SELECT clause-t ad a lekérdezéshez.
 	 *
 	 * @param string $field A mező neve, vagy mezőkifejezés

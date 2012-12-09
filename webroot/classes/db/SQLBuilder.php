@@ -21,7 +21,7 @@ abstract class SQLBuilder implements SQL {
 	 *
 	 * @param string $where A feltételkifejezés
 	 * @param mixed... $data A táblakifejezések előállításához szükséges paraméterek, vararg paraméterként
-	 * @return QueryBuilder $this
+	 * @return SQLBuilder $this
 	 */
 	public function where($where, $data=null) {
 		$this->whereSql []= $where;
@@ -29,6 +29,11 @@ abstract class SQLBuilder implements SQL {
 		return $this;
 	}
 
+	/**
+	 * Return the string format of the WHERE clause
+	 * 
+	 * @return string
+	 */
 	protected function getWhereClause() {
 		if (!empty($this->whereSql)) {
 			return ' WHERE (' . implode(') AND (',$this->whereSql) . ')';
@@ -37,6 +42,11 @@ abstract class SQLBuilder implements SQL {
 		}
 	}
 	
+	/**
+	 * Returns the collected data for the WHERE clause
+	 * 
+	 * @return array
+	 */
 	protected function getWhereData() {
 		return $this->whereData;
 	}
