@@ -1,6 +1,6 @@
 <?php
 
-class UpdateBuilder extends SQLBuilder {
+class InsertBuilder implements SQL {
 	
 	/**
 	 * Az utasítás által érintett tábla
@@ -8,6 +8,13 @@ class UpdateBuilder extends SQLBuilder {
 	 * @var string
 	 */
 	private $table;
+	
+	/**
+	 * Az utasítás által érintett mezők nevei
+	 * 
+	 * @var array
+	 */
+	private $setFields = array();
 	
 	/**
 	 * Az utasítás SET clause-ai
@@ -24,56 +31,47 @@ class UpdateBuilder extends SQLBuilder {
 	private $setData = array();
 	
 	/**
-	 * @return UpdateBuilder
+	 * @return InsertBuilder
 	 */
 	public static function create() {
 		return new self();
 	}
 	
 	/**
-	 * Egy WHERE clause-t ad a lekérdezéshez. (Ezek konjunkciója lesz a teljes feltétel.)
-	 *
-	 * @param string $where A feltételkifejezés
-	 * @param mixed... $data A táblakifejezések előállításához szükséges paraméterek, vararg paraméterként
-	 * @return UpdateBuilder $this
-	 */
-	public function where($where, $data=null) {
-		return parent::where($where, $data);
-	}
-	
-	/**
-	 * Beállítja hogy melyik tábla kerül frissítére.
+	 * Beállítja hogy melyik táblába szúrunk be adatot.
 	 * 
 	 * @param string $table
-	 * @return UpdateBuilder
+	 * @return InsertBuilder
 	 */
-	public function update($table) {
+	public function into($table) {
 		$this->table = $table;
 		return $this;
 	}
 	
 	/**
-	 * Egy SET clause-t ad az utasításhez.
+	 * Egy mező értékét állítja be az utasításban.
 	 *
 	 * @param string $where A beállítandó mező
 	 * @param mixed $data A beállított érték
 	 * @return UpdateBuilder $this
 	 */
 	public function set($field, $value) {
-		$this->setSql []= $field.'=?';
+		$this->setFields []= $field;
+		$this->setSql []= '?';
 		$this->setData []= $value;
 		return $this;
 	}
 
 	/**
-	 * Egy SET clause-t ad az utasításhez.
+	 * Egy mező értékét állítja be az utasításban.
 	 *
 	 * @param string $where A beállítandó mező
 	 * @param string $value A beállítandó SQL kifejezés
 	 * @return UpdateBuilder $this
 	 */
-	public function setNative($field, $value) {
-		$this->setSql []= $field.'='.$value;
+	public function setSQL($field, $value) {
+		$this->setFields []= $field;
+		$this->setSql []= $value;
 		return $this;
 	}
 
@@ -85,11 +83,9 @@ class UpdateBuilder extends SQLBuilder {
 	 * @return string
 	 */
 	public function convertToString(DbDialect $dialect = null) {
-		$sql = 'UPDATE ' . $this->table;
-		if (!empty($this->setSql)) {
-			$sql .= ' SET ' . implode(', ',$this->setSql);
-		}
-		$sql .= $this->getWhereClause();
+		$sql = 'INSERT INTO ' . $this->table;
+		$sql .= ' ( ' . implode(', ', $this->setFields) . ' ) ';
+		$sql .= ' VALUES ( ' . implode(', ',$this->setSql) . ' ) ';
 		return $sql;
 	}
 
@@ -100,7 +96,7 @@ class UpdateBuilder extends SQLBuilder {
 	 * @return array
 	 */
 	public function convertToParamsArray(DbDialect $dialect = null) {
-		return array_merge($this->setData, $this->getWhereData());
+		return $this->setData;
 	}
 	
 }
