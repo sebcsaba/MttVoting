@@ -3,6 +3,15 @@
 class ApplicationHandlerImpl implements ApplicationHandler {
 	
 	/**
+	 * @var Config
+	 */
+	private $config;
+	
+	public function __construct(Config $config) {
+		$this->config = $config;
+	}
+	
+	/**
 	 * Determines the first executed forward by the given request
 	 * 
 	 * @param Request $request
@@ -20,10 +29,8 @@ class ApplicationHandlerImpl implements ApplicationHandler {
 	}
 	
 	private function createAuthenticationRedirect() {
-		// TODO use $config['url'] here, and delegate auth url too
-		$return = Url::create('http://www.tolkien.hu/privatevoting/');
-		$location = Url::create('http://www.tolkien.hu/index.php')
-			->option('com_user')->view('login')->return(base64_encode($return));
+		$return = Url::create($this->config->get('url'));
+		$location = Url::create($this->config->get('authentication_url'))->return(base64_encode($return));
 		return new RedirectForward($location);
 	}
 	
