@@ -1,14 +1,13 @@
-function openPage(page,paramData) {
-	if (!paramData) paramData = {};
-	paramData['do'] = 'Show'+page;
+function myAjax(data, realSuccess) {
 	$.ajax('index.php',{
-		data: paramData,
+		data: data,
 		success: function(data, status, xhr) {
-			var redirect = xhr.getResponseHeader("X-Location");
-			if (redirect) {
-				document.location = redirect;
+			if (xhr.getResponseHeader("X-Location")) {
+				document.location = xhr.getResponseHeader("X-Location");
+			} else if (xhr.getResponseHeader("X-Error")) {
+				alert(xhr.getResponseHeader("X-Error"));
 			} else {
-				$('#central-content-for-privatevoting').html(data);
+				realSuccess(data);
 			}
 		},
 		error: function(x,y,z) {
@@ -17,5 +16,19 @@ function openPage(page,paramData) {
 			alert(y);
 			alert(z);
 		}
+	});
+}
+
+function openPage(page,paramData) {
+	if (!paramData) paramData = {};
+	paramData['do'] = 'Show'+page;
+	myAjax(paramData,function(data){
+		$('#central-content-for-privatevoting').html(data);
+	});
+}
+
+function submitForm(form) {
+	myAjax(form.serialize(), function(){
+		$('#central-content-for-privatevoting').html(data);
 	});
 }

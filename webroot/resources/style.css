@@ -1,0 +1,10 @@
+.important {
+	font-weight: bold;
+}
+
+.answer {
+	margin: 1em;
+}
+.answer input {
+	vertical-align: middle;
+}

@@ -41,6 +41,7 @@ class RequestHandler {
 			$this->database->commit();
 		} catch (Exception $e) {
 			$this->database->rollback();
+			header('X-Error: '.$e->getMessage());
 			throw $e;
 		}
 	}
