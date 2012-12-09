@@ -9,7 +9,7 @@
  * A paraméterek helyére ? kerüljön.
  * 
  */
-class QueryBuilder implements SQL {
+class QueryBuilder extends SQLBuilder {
 	
 	/**
 	 * A lekérdezés SELECT clause-ai
@@ -40,20 +40,6 @@ class QueryBuilder implements SQL {
 	private $fromData = array();
 	
 	/**
-	 * A lekérdezés WHERE clause-ai
-	 *
-	 * @var array
-	 */
-	private $whereSql = array();
-	
-	/**
-	 * A lekérdezés WHERE clause-ainak adatai
-	 *
-	 * @var array
-	 */
-	private $whereData = array();
-	
-	/**
 	 * A lekérdezés GROUP BY clause-ai
 	 *
 	 * @var array
@@ -80,8 +66,6 @@ class QueryBuilder implements SQL {
 	 * @var integer
 	 */
 	private $offset;
-	
-	public function __construct() {}
 	
 	/**
 	 * @return QueryBuilder
@@ -155,19 +139,6 @@ class QueryBuilder implements SQL {
 	public function leftJoin($join, $data=null) {
 		$this->fromSql []= 'LEFT JOIN '.$join;
 		$this->fromData = array_merge($this->fromData, func_get_args_but_first());
-		return $this;
-	}
-
-	/**
-	 * Egy WHERE clause-t ad a lekérdezéshez. (Ezek konjunkciója lesz a teljes feltétel.)
-	 *
-	 * @param string $where A feltételkifejezés
-	 * @param mixed... $data A táblakifejezések előállításához szükséges paraméterek, vararg paraméterként
-	 * @return QueryBuilder $this
-	 */
-	public function where($where, $data=null) {
-		$this->whereSql []= $where;
-		$this->whereData = array_merge($this->whereData, func_get_args_but_first());
 		return $this;
 	}
 
@@ -258,9 +229,7 @@ class QueryBuilder implements SQL {
 		if (!empty($this->fromSql)) {
 			$sql .= ' FROM ' . implode(' ',$this->fromSql);
 		}
-		if (!empty($this->whereSql)) {
-			$sql .= ' WHERE (' . implode(') AND (',$this->whereSql) . ')';
-		}
+		$sql .= $this->getWhereClause();
 		if (!empty($this->groupSql)) {
 			$sql .= ' GROUP BY ' . implode(', ',$this->groupSql);
 		}
@@ -284,7 +253,7 @@ class QueryBuilder implements SQL {
 	 * @return array
 	 */
 	public function convertToParamsArray(DbDialect $dialect = null) {
-		return array_merge($this->fieldData, $this-> fromData, $this->whereData);
+		return array_merge($this->fieldData, $this->fromData, $this->getWhereData());
 	}
 	
 }

@@ -1,13 +1,6 @@
 <?php
 
-class UpdateBuilder {
-	
-	/**
-	 * Az utasítás típusa: 'update' vagy 'delete'
-	 * 
-	 * @var string('update','delete')
-	 */
-	private $mode;
+class UpdateBuilder extends SQLBuilder {
 	
 	/**
 	 * Az utasítás által érintett tábla
@@ -31,22 +24,6 @@ class UpdateBuilder {
 	private $setData = array();
 	
 	/**
-	 * Az utasítás WHERE clause-ai
-	 *
-	 * @var array
-	 */
-	private $whereSql = array();
-	
-	/**
-	 * Az utasítás WHERE clause-ainak adatai
-	 *
-	 * @var array
-	 */
-	private $whereData = array();
-	
-	public function __construct() {}
-	
-	/**
 	 * @return UpdateBuilder
 	 */
 	public static function create() {
@@ -60,19 +37,6 @@ class UpdateBuilder {
 	 * @return UpdateBuilder
 	 */
 	public function update($table) {
-		$this->mode = 'update';
-		$this->table = $table;
-		return $this;
-	}
-	
-	/**
-	 * Beállítja hogy melyik táblából fogunk törölni
-	 * 
-	 * @param string $table
-	 * @return UpdateBuilder
-	 */
-	public function deleteFrom($table) {
-		$this->mode = 'delete';
 		$this->table = $table;
 		return $this;
 	}
@@ -103,16 +67,29 @@ class UpdateBuilder {
 	}
 
 	/**
-	 * Egy WHERE clause-t ad az utasításhez. (Ezek konjunkciója lesz a teljes feltétel.)
-	 *
-	 * @param string $where A feltételkifejezés
-	 * @param mixed... $data A táblakifejezések előállításához szükséges paraméterek, vararg paraméterként
-	 * @return UpdateBuilder $this
+	 * Returns the string representation of this SQL
+	 * 
+	 * @param DbDialect $dialect If not given, the implementation can skip or use a default behaviour where
+	 * 		dialect-dependent is needed.
+	 * @return string
 	 */
-	public function where($where, $data=null) {
-		$this->whereSql []= $where;
-		$this->whereData = array_merge($this->whereData, func_get_args_but_first());
-		return $this;
+	public function convertToString(DbDialect $dialect = null) {
+		$sql = 'UPDATE ' . $this->table;
+		if (!empty($this->setSql)) {
+			$sql .= ' SET ' . implode(', ',$this->setSql);
+		}
+		$sql .= $this->getWhereClause();
+		return $sql;
 	}
 
+	/**
+	 * Returns the array of the parameters of this SQL
+	 * @param DbDialect $dialect If not given, the implementation can skip or use a default behaviour where
+	 * 		dialect-dependent is needed.
+	 * @return array
+	 */
+	public function convertToParamsArray(DbDialect $dialect = null) {
+		return array_merge($this->setData, $this->getWhereData());
+	}
+	
 }
