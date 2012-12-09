@@ -82,3 +82,20 @@ function coalesce() {
 	}
 	return null;
 }
+
+/**
+ * Implodes the content of the given associative array
+ * 
+ * @param array $array
+ * @param string $betweenKeyAndValue
+ * @param string $beforeItems
+ * @param string $afterItems
+ * @return string
+ */
+function implode_assoc(array $array, $betweenKeyAndValue, $beforeItems='', $afterItems='') {
+	$result = '';
+	foreach ($array as $k=>$v) {
+		$result .= $beforeItems.$k.$betweenKeyAndValue.$v.$afterItems;
+	}
+	return $result;
+}
