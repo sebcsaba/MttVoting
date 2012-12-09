@@ -19,12 +19,30 @@ class TohuUserService extends DbServiceBase implements UserService {
 	}
 	
 	/**
+	 * Find users who contains the given search string in theirs name
+	 * 
 	 * @param string $name
 	 * @return User[]
 	 */
 	public function findUsersByName($name) {
 		$query = QueryBuilder::create()->from('users')->where('name ilike ?', '%'.$name.'%');
 		return $this->loadUsers($query);
+	}
+	
+	/**
+	 * Loads the user by the given id, or return null if not found
+	 * 
+	 * @param int $id
+	 * @return User or null
+	 */
+	public function findUserById($id) {
+		$query = QueryBuilder::create()->from('users')->where('id=?', $id);
+		$row = $this->db->queryRow($query, true);
+		if (is_null($row)) {
+			return null;
+		} else {
+			return new User($row['id'], $row['name']);
+		}
 	}
 	
 	/**
@@ -37,6 +55,8 @@ class TohuUserService extends DbServiceBase implements UserService {
 	}
 	
 	/**
+	 * Returns the users with theirs id in the given array
+	 * 
 	 * @param QueryBuilder $query
 	 * @return User[]
 	 */
