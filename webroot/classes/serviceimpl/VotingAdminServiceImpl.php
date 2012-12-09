@@ -3,31 +3,28 @@
 class VotingAdminServiceImpl extends DbServiceBase implements VotingAdminService {
 	
 	public function create(Voting $voting) {
-		$votingRow = array(
-			'creator_user_id' => $voting->getCreatorUserId(),
-			'title' => $voting->getTitle(),
-			'description' => $voting->getDescription(),
-			'start_date' => $voting->getStartDate(),
-			'stop_date' => $voting->getStopDate(),
-			'private' => $voting->getPrivate()
-		);
-		$votingId = $this->db->insert('privatevoting_voting', $votingRow);
+		$insert = InsertBuilder::create()->into('privatevoting_voting')
+			->set('creator_user_id', $voting->getCreatorUserId())
+			->set('title', $voting->getTitle())
+			->set('description', $voting->getDescription())
+			->set('start_date', $voting->getStartDate())
+			->set('stop_date', $voting->getStopDate())
+			->set('private', $voting->getPrivate());
+		$votingId = $this->db->exec($insert);
 		
 		foreach ($voting->getAnswers() as $title) {
-			$answerRow = array(
-				'fk_voting' => $votingId,
-				'title' => $title
-			);
-			$this->db->insert('privatevoting_answer', $answerRow);
+			$insert = InsertBuilder::create()->into('privatevoting_answer')
+				->set('fk_voting', $votingId)
+				->set('title', $title);
+			$this->db->exec($insert);
 		}
 
 		foreach ($voting->getParticipants() as $participant) {
-			$participantRow = array(
-				'fk_voting' => $votingId,
-				'user_id' => $participant->getUser()->getUserId(),
-				'voted' => false
-			);
-			$this->db->insert('privatevoting_participant', $participantRow);
+			$insert = InsertBuilder::create()->into('privatevoting_participant')
+				->set('fk_voting', $votingId)
+				->set('user_id', $participant->getUser()->getUserId())
+				->set('voted', false);
+			$this->db->exec($insert);
 		}
 	}
 	
@@ -46,12 +43,11 @@ class VotingAdminServiceImpl extends DbServiceBase implements VotingAdminService
 			$index = array_search($userId, $oldParticipandUIDs);
 			if ($index===false) {
 				// new user added to list
-				$participantRow = array(
-					'fk_voting' => $voting->getId(),
-					'user_id' => $userId,
-					'voted' => false
-				);
-				$this->db->insert('privatevoting_participant', $participantRow);
+				$insert = InsertBuilder::create()->into('privatevoting_participant')
+					->set('fk_voting', $voting->getId())
+					->set('user_id', $userId)
+					->set('voted', false);
+				$this->db->exec($insert);
 			} else {
 				// old user found, ignore
 				unset($oldParticipandUIDs[$index]);

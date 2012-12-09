@@ -12,19 +12,21 @@ class VotingServiceImpl extends DbServiceBase implements VotingService {
 	public function vote(Voting $voting, User $user, $answerId) {
 		$this->checkIfVotingAndAnswerIsOpened($voting, $answerId);
 		$participantId = $this->checkIfVotingIsAnswerableForUser($voting, $user);
-		$query = UpdateBuilder::create()->update('privatevoting_participant')
+		
+		$update = UpdateBuilder::create()->update('privatevoting_participant')
 			->where('id=?', $participantId)
 			->set('voted', true);
-		$this->db->exec($query);
-		$voteRow = array(
-			'fk_voting' => $voting->getId(),
-			'fk_answer' => $answerId,
-			'fk_participant' => null,
-		);
+		$this->db->exec($update);
+		
+		$insert = InsertBuilder::create()->into('privatevoting_vote')
+			->set('fk_voting', $voting->getId())
+			->set('fk_answer', $answerId)
+			->set('fk_participant', null);
+		
 		if (!$voting->getPrivate()) {
-			$voteRow['fk_participant'] = $participantId;
+			$insert->set('fk_participant', $participantId);
 		}
-		$this->db->insert('privatevoting_vote', $voteRow);
+		$this->db->exec($insert);
 	}
 	
 	private function checkIfVotingAndAnswerIsOpened(Voting $voting, $answerId) {
