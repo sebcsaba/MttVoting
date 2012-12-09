@@ -39,7 +39,7 @@ class VotingServiceImpl extends DbServiceBase implements VotingService {
 	private function checkIfVotingIsAnswerableForUser(Voting $voting, User $user) {
 		$query = QueryBuilder::create()->from('privatevoting_participant')
 			->where('fk_voting=?', $voting->getId())
-			->where('user_id=?', $user->getId());
+			->where('user_id=?', $user->getUserId());
 		$row = $this->db->queryRow($query);
 		if (is_null($row)) throw new Exception('this user is not participant of the given voting');
 		if ($row['voted']) throw new Exception('this user has already voted');

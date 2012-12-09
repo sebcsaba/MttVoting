@@ -40,7 +40,7 @@ class Database extends LowDatabase {
 	 * @throws NoSuchDataException Ha üres eredményt kaptunk, és $nullOnEmpty hamis.
 	 */
 	public function queryCell(SQL $query, $fieldName=null, $nullOnEmpty=false) {
-		$row = $this->queryFirstRow($query, $nullOnEmpty);
+		$row = $this->queryRow($query, $nullOnEmpty);
 		if ($row===null) {
 			return null;
 		}
