@@ -9,14 +9,20 @@
 	vertical-align: middle;
 }
 
-form#edit_new .full {
+form.voteform .full {
 	width: 100%;
 }
-form#edit_new textarea.full {
+form.voteform textarea.full {
 	height: 15ex;
+	font-family: Verdana;
+	font-size: 10pt;
 }
 
-form#edit_new td.label {
+form.voteform td.label {
 	width: 25%;
 	vertical-align: top;
+}
+
+.footnote {
+	font-size: 0.7em;
 }

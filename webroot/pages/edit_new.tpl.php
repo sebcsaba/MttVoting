@@ -1,6 +1,6 @@
 <div class="thcm-fp-title">Új szavazás</div>
 <div class="content-list-introtext">
-	<form id="edit_new" action="index.php?do=Vote" method="post">
+	<form id="edit_new" action="index.php" method="post" class="voteform">
 		<input type="hidden" name="do" value="SaveNew"/>
 		<table>
 			<tr>
@@ -9,7 +9,7 @@
 			</tr>
 			<tr>
 				<td class="label">Leírás:</td>
-				<td><textarea class="full"></textarea></td>
+				<td><textarea class="full" name="description"></textarea></td>
 			</tr>
 			<tr>
 				<td colspan="2">
