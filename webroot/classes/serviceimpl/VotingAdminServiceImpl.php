@@ -12,24 +12,18 @@ class VotingAdminServiceImpl extends DbServiceBase implements VotingAdminService
 			->set('private', $voting->getPrivate());
 		$votingId = $this->db->exec($insert);
 		
-		foreach ($voting->getAnswers() as $title) {
-			$insert = InsertBuilder::create()->into('privatevoting_answer')
-				->set('fk_voting', $votingId)
-				->set('title', $title);
-			$this->db->exec($insert);
-		}
-
-		foreach ($voting->getParticipants() as $participant) {
-			$insert = InsertBuilder::create()->into('privatevoting_participant')
-				->set('fk_voting', $votingId)
-				->set('user_id', $participant->getUser()->getUserId())
-				->set('voted', false);
-			$this->db->exec($insert);
-		}
+		$this->insertAnswers($voting->getAnswers(), $votingId);
+		$this->insertParticipants($voting->getParticipants(), $votingId);
 		
 		return $votingId;
 	}
 	
+	/**
+	 * Updates the given voting. This voting contains only
+	 * the new answers and participants to insert.
+	 * 
+	 * @param Voting $voting
+	 */
 	public function update(Voting $voting) {
 		$query = UpdateBuilder::create()->update('privatevoting_voting')
 			->set('title',$voting->getTitle())
@@ -37,30 +31,8 @@ class VotingAdminServiceImpl extends DbServiceBase implements VotingAdminService
 			->where('id=?', $voting->getId());
 		$this->db->exec($query);
 
-		$query = QueryBuilder::create()->select('user_id')->from('privatevoting_participant')
-			->where('fk_voting=?', $voting->getId());
-		$oldParticipandUIDs = $this->db->queryColumn($query);
-		foreach ($voting->getParticipants() as $participant) {
-			$userId = $participant->getUser()->getUserId();
-			$index = array_search($userId, $oldParticipandUIDs);
-			if ($index===false) {
-				// new user added to list
-				$insert = InsertBuilder::create()->into('privatevoting_participant')
-					->set('fk_voting', $voting->getId())
-					->set('user_id', $userId)
-					->set('voted', false);
-				$this->db->exec($insert);
-			} else {
-				// old user found, ignore
-				unset($oldParticipandUIDs[$index]);
-			}
-		}
-		// $oldParticipandUIDs contains only ids of removable participants
-		$query = DeleteBuilder::create()->from('privatevoting_participant')
-			->where('fk_voting=?', $voting->getId())
-			->where('user_id IN (?)', join(',', $oldParticipandUIDs))
-			->where('NOT voted');
-		$this->db->exec($query);
+		$this->insertAnswers($voting->getAnswers(), $voting->getId());
+		$this->insertParticipants($voting->getParticipants(), $votingId);
 	}
 	
 	public function remove(Voting $voting) {
@@ -83,4 +55,23 @@ class VotingAdminServiceImpl extends DbServiceBase implements VotingAdminService
 		}
 	}
 	
+	private function insertAnswers(array $answers, $votingId) {
+		foreach ($answers as $title) {
+			$insert = InsertBuilder::create()->into('privatevoting_answer')
+				->set('fk_voting', $votingId)
+				->set('title', $title);
+			$this->db->exec($insert);
+		}
+	}
+
+	private function insertParticipants(array $participants, $votingId) {
+		foreach ($participants as $participant) {
+			$insert = InsertBuilder::create()->into('privatevoting_participant')
+				->set('fk_voting', $votingId)
+				->set('user_id', $participant->getUser()->getUserId())
+				->set('voted', false);
+			$this->db->exec($insert);
+		}
+	}
+		
 }
