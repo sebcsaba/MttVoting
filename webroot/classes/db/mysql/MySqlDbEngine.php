@@ -76,17 +76,24 @@ class MySqlDbEngine extends DbEngine {
 	 * SQL parancs futtatása a megadott paraméterekkel.
 	 *
 	 * @param NativeSQL $query A végrehajtandó SQL parancs, már előkészítve az engine-nek.
-	 * @return numeric Az érintett sorok száma.
+	 * @param boolean $returnInserted Ha igaz, a beszúrt sor azonosítóját adja vissza, különben az érintett sorok számát
+	 * @return numeric Az érintett sorok száma vagy abeszúrt sor azonosítója
+	 * @throws DbException ha nem sikerült a végrehajtani a parancsot
 	 */
-	public function execNative(NativeSQL $query) {
+	public function execNative(NativeSQL $query, $returnInserted) {
 		$result = @mysql_query($query->convertToString($this->getDialect()), $this->conn);
 		if ($result) {
-			if ($result===true) {
-				return 0;
+			if ($returnInserted) {
+				$returnValue = mysql_insert_id($this->conn);
+			} else {
+				if ($result===true) {
+					$returnValue = 0;
+				} else {
+					$returnValue = mysql_affected_rows($result);
+				}
 			}
-			$affected_rows = mysql_affected_rows($result);
-			mysql_free_result($result);
-			return $affected_rows;
+			@mysql_free_result($result);
+			return $returnValue;
 		} else {
 			throw new DbException(mysql_error($this->conn), $query);
 		}

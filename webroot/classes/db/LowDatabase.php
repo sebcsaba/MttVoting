@@ -84,14 +84,14 @@ class LowDatabase {
 	 * SQL parancs futtatása a megadott paraméterekkel.
 	 *
 	 * @param SQL $query A végrehajtandó SQL parancs (? jelöléssel a paraméterek helye)
-	 * @return integer Az érintett sorok száma.
+	 * @return integer Az érintett sorok száma, vagy a beszúrt sor azonosítója, ha a megadott paraméter InsertBuilder
 	 * @throws DbException Ha nem sikerült a parancsot végrehajtani.
 	 */
 	public function exec(SQL $query) {
 		$preparedQuery = $this->engine->getDialect()->prepareQuery($query);
-		return $this->engine->execNative($preparedQuery);
+		return $this->engine->execNative($preparedQuery, $query instanceof InsertBuilder);
 	}
-
+	
 	/**
 	 * SQL lekérdezés futtatása a megadott paraméterekkel.
 	 *

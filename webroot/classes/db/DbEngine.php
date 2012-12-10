@@ -92,10 +92,11 @@ abstract class DbEngine {
 	 * SQL parancs futtatása a megadott paraméterekkel.
 	 *
 	 * @param NativeSQL $query A végrehajtandó SQL parancs, már előkészítve az engine-nek.
-	 * @return numeric Az érintett sorok száma.
+	 * @param boolean $returnInserted Ha igaz, a beszúrt sor azonosítóját adja vissza, különben az érintett sorok számát
+	 * @return numeric Az érintett sorok száma vagy abeszúrt sor azonosítója
 	 * @throws DbException ha nem sikerült a végrehajtani a parancsot
 	 */
-	public abstract function execNative(NativeSQL $query);
+	public abstract function execNative(NativeSQL $query, $returnInserted);
 	
 	/**
 	 * A kapott, engine-függővé alakított SQL lekérdezés végrehajtása
