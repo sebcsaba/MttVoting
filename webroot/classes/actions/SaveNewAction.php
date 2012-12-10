@@ -21,14 +21,14 @@ class SaveNewAction implements Action {
 			$id = $this->votingAdminService->create($voting);
 			$request->set('id', $id);
 			return new ActionForward('ShowEditVotingAction');
-		} catch (Exception $ex) {
+		} catch (ValidationException $ex) {
 			return new ErrorForward($ex->getMessage());
 		}
 	}
 	
 	private function convertToVoting(Request $request) {
 		$title = $request->get('title');
-		if (empty($title)) throw new Exception('A címet kötelező kitölteni!');
+		if (empty($title)) throw new ValidationException('A címet kötelező kitölteni!');
 		return new Voting(null,
 			$request->getUser()->getUserId(),
 			$title,
@@ -48,14 +48,14 @@ class SaveNewAction implements Action {
 			}
 		}
 		if (count($answers)<2) {
-			throw new Exception('Legalább két választ meg kell adni');
+			throw new ValidationException('Legalább két választ meg kell adni');
 		}
 		return $answers;
 	}
 	
 	private function getBooleanRadioField(Request $request, $fieldName, $errorMessage) {
 		$fieldValue = $request->get($fieldName);
-		if (!in_array($fieldValue,array(0,1))) throw new Exception($errorMessage);
+		if (!in_array($fieldValue,array(0,1))) throw new ValidationException($errorMessage);
 		return $fieldValue==1;
 	}
 	
