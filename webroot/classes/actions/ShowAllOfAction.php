@@ -1,6 +1,6 @@
 <?php
 
-class ShowAllForAction implements Action {
+class ShowAllOfAction implements Action {
 	
 	/**
 	 * @var VotingListingService
@@ -16,9 +16,9 @@ class ShowAllForAction implements Action {
 	 * @return Forward
 	 */
 	public function serve(Request $request) {
-		$request->setData('title','Összes szavazás, amin részt vehetsz');
-		$request->setData('linksToPage', 'Voting');
-		$request->setData('votings', $this->votingListingService->getAllFor($request->getUser()));
+		$request->setData('title','Összes szavazás, amit létrehoztál');
+		$request->setData('linksToPage', 'EditVoting');
+		$request->setData('votings', $this->votingListingService->getAllOf($request->getUser()));
 		return new PageForward('list');
 	}
 	
