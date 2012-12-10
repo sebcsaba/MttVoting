@@ -55,6 +55,10 @@ class Request {
 		return I($this->request, $key);
 	}
 	
+	public function set($key, $value) {
+		$this->request[$key] = $value;
+	}
+	
 	public function hasData($key) {
 		return array_key_exists($key, $this->data);
 	}

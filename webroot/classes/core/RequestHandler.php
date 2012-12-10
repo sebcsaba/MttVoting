@@ -85,7 +85,10 @@ class RequestHandler {
 	 * @return string
 	 */
 	private function encodeHeader($string) {
-		return '=?UTF-8?Q?'.quoted_printable_encode($string).'?=';
+		$string = preg_replace('/\s/', ' ',$string);
+		$string = quoted_printable_encode($string);
+		$string = preg_replace('/=\s+/','',$string);
+		return '=?UTF-8?Q?'.$string.'?=';
 	}
 	
 }
