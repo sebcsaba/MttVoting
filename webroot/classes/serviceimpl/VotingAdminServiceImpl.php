@@ -32,7 +32,7 @@ class VotingAdminServiceImpl extends DbServiceBase implements VotingAdminService
 		$this->db->exec($query);
 
 		$this->insertAnswers($voting->getAnswers(), $voting->getId());
-		$this->insertParticipants($voting->getParticipants(), $votingId);
+		$this->insertParticipants($voting->getParticipants(), $voting->getId());
 	}
 	
 	public function remove(Voting $voting) {

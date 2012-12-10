@@ -1,6 +1,6 @@
 <?php
 
-class SaveNewAction implements Action {
+class SaveNewAction extends SaveActionBase implements Action {
 
 	/**
 	 * @var VotingAdminService
@@ -27,30 +27,15 @@ class SaveNewAction implements Action {
 	}
 	
 	private function convertToVoting(Request $request) {
-		$title = $request->get('title');
-		if (empty($title)) throw new ValidationException('A címet kötelező kitölteni!');
 		return new Voting(null,
 			$request->getUser()->getUserId(),
-			$title,
+			$this->getTitle($request),
 			''.$request->get('description'),
 			new DateTime(),
 			null,
 			$this->getBooleanRadioField($request, 'private', 'Válaszd ki, hogy publikus vagy privát lesz-e a szavazás!'),
-			$this->getAnswers($request),
+			$this->getAnswers($request, 2),
 			array());
-	}
-	
-	private function getAnswers(Request $request) {
-		$answers = array();
-		foreach ($request->get('answer') as $title) {
-			if (!empty($title)) {
-				$answers []= $title;
-			}
-		}
-		if (count($answers)<2) {
-			throw new ValidationException('Legalább két választ meg kell adni');
-		}
-		return $answers;
 	}
 	
 	private function getBooleanRadioField(Request $request, $fieldName, $errorMessage) {
