@@ -8,3 +8,15 @@
 .answer input {
 	vertical-align: middle;
 }
+
+form#edit_new .full {
+	width: 100%;
+}
+form#edit_new textarea.full {
+	height: 15ex;
+}
+
+form#edit_new td.label {
+	width: 25%;
+	vertical-align: top;
+}

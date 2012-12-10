@@ -22,9 +22,6 @@ function myAjax(data, realSuccess, method) {
 		},
 		error: function(x,y,z) {
 			alert('error: '+x.statusCode);
-			alert(x);
-			alert(y);
-			alert(z);
 		}
 	});
 }
@@ -41,4 +38,15 @@ function submitForm(form) {
 	myAjax(form.serialize(), function(data){
 		$('#central-content-for-privatevoting').html(data);
 	},'post');
+}
+
+function addNewAnswerField() {
+	var pt = $('#answer_prototype');
+	var index = pt.parent().children('input').length-1;
+	var result = pt.clone();
+	result.attr('name','answer['+index+']');
+	result.removeAttr('id');
+	result.removeAttr('onfocus');
+	result.insertBefore(pt);
+	result.focus();
 }
