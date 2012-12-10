@@ -34,6 +34,17 @@
 				</td>
 			</tr>
 		</table>
-		<input type="button" onclick="submitForm($('form#edit_detail'))" value="Mentés"/>
+		<input type="button" onclick="submitForm($('form#edit_detail'));" value="Mentés"/>
+	</form>
+	<hr/>
+	<form id="edit_close" action="index.php" method="post" class="voteform onebutton">
+		<input type="hidden" name="do" value="Close"/>
+		<input type="hidden" name="id" value="<?h($request->getData('voting')->getId())?>"/>
+		<input type="button" onclick="if(confirm('Biztosan lezárod a szavazást?')){submitForm($('form#edit_close'));}" value="Lezárás"/>
+	</form>
+	<form id="edit_delete" action="index.php" method="post" class="voteform onebutton">
+		<input type="hidden" name="do" value="Delete"/>
+		<input type="hidden" name="id" value="<?h($request->getData('voting')->getId())?>"/>
+		<input type="button" onclick="submitForm($('form#edit_delete'));" value="Törlés"/>
 	</form>
 </div>

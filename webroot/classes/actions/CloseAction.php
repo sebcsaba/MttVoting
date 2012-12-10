@@ -1,13 +1,19 @@
 <?php
 
-class ShowEditVotingAction implements Action {
+class CloseAction implements Action {
+	
+	/**
+	 * @var VotingAdminService
+	 */
+	private $votingAdminService;
 	
 	/**
 	 * @var VotingListingService
 	 */
 	private $votingListingService;
 
-	public function __construct(VotingListingService $votingListingService) {
+	public function __construct(VotingAdminService $votingAdminService, VotingListingService $votingListingService) {
+		$this->votingAdminService = $votingAdminService;
 		$this->votingListingService = $votingListingService;
 	}
 	
@@ -22,9 +28,11 @@ class ShowEditVotingAction implements Action {
 		if ($voting==null) {
 			$request->setData('message', 'Nincs elérhető szavazás a megadott azonosítóval');
 			return new PageForward('error');
-		} else if (is_null($voting->getStopDate())) {
-			return new PageForward('edit_details');
+		} else if (!is_null($voting->getStopDate())) {
+			$request->setData('message', 'A megadott szavazás már lezárásra került!');
+			return new PageForward('error');
 		} else {
+			$this->votingAdminService->close($voting);
 			return new PageForward('edit_closed');
 		}
 	}
