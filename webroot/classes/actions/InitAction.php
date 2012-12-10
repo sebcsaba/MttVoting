@@ -16,7 +16,7 @@ class InitAction implements Action {
 	 * @return Forward
 	 */
 	public function serve(Request $request) {
-		$request->setData('answerableFor', $this->votingListingService->getAnswerableFor($request->getUser()));
+		$request->setData('interestingFor', $this->votingListingService->getInterestingFor($request->getUser()));
 		$request->setData('openedOf', $this->votingListingService->getAllOpenedOf($request->getUser()));
 		return new PageForward('index');
 	}

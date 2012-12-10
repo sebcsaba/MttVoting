@@ -60,4 +60,15 @@ interface VotingListingService {
 	 */
 	public function getAllFor(User $user, $limit = 10);
 	
+	/**
+	 * Returns all the Votings that can be interesting for the given user.
+	 * This contains:
+	 * - All the votings what is not answered yet, but may be answered by him.
+	 * - All the votings he answered, but not closed yet
+	 * - Some closed votings in which he was a participant. Maximum 10, and closed not earlier than one month.
+	 * 
+	 * @param User $user
+	 */
+	public function getInterestingFor(User $user);
+	
 }

@@ -170,4 +170,30 @@ class VotingListingServiceImpl extends DbServiceBase implements VotingListingSer
 		return $result;
 	}
 	
+	/**
+	 * Returns all the Votings that can be interesting for the given user.
+	 * This contains:
+	 * - All the votings what is not answered yet, but may be answered by him.
+	 * - All the votings he answered, but not closed yet
+	 * - Some closed votings in which he was a participant. Maximum 10, and closed not earlier than one month.
+	 * 
+	 * @param User $user
+	 */
+	public function getInterestingFor(User $user) {
+		$query = $this->createQueryFor($user)
+			->where('(NOT p.voted) OR (v.stop_date IS NULL) OR (v.stop_date>=DATE_SUB(NOW(),INTERVAL 1 MONTH))');
+		$result = array();
+		$closedCount = 0;
+		foreach ($this->db->query($query) as $row) {
+			$closed = !is_null($row['stop_date']);
+			if ($closed) {
+				++$closedCount;
+			}
+			if (!$closed || $closedCount<=10) {
+				$result []= $this->createVoting($row, array(), array());
+			}
+		}
+		return $result;
+	}
+	
 }
