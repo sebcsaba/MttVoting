@@ -26,6 +26,8 @@ class VotingAdminServiceImpl extends DbServiceBase implements VotingAdminService
 				->set('voted', false);
 			$this->db->exec($insert);
 		}
+		
+		return $votingId;
 	}
 	
 	public function update(Voting $voting) {
