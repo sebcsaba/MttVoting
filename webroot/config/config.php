@@ -15,6 +15,7 @@ return config_merge(array(
 		'VotingListingService' => 'VotingListingServiceImpl',
 		'VotingAdminService' => 'VotingAdminServiceImpl',
 		'VotingService' => 'VotingServiceImpl',
+		'VotingResultService' => 'VotingResultServiceImpl',
 		'DbDialect' => 'MySqlDbDialect',
 		'DbEngine' => 'MySqlDbEngine',
 	),
