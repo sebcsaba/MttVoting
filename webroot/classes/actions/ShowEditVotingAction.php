@@ -25,7 +25,7 @@ class ShowEditVotingAction implements Action {
 		} else if (is_null($voting->getStopDate())) {
 			return new PageForward('edit_details');
 		} else {
-			return new PageForward('edit_closed');
+			return new ActionForward('ShowResultAction');
 		}
 	}
 	

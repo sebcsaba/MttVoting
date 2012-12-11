@@ -33,7 +33,7 @@ class ShowVotingAction implements Action {
 		} else if (is_null($voting->getStopDate())) {
 			return new PageForward('voted');
 		} else {
-			return new PageForward('result');
+			return new ActionForward('ShowResultAction');
 		}
 	}
 	

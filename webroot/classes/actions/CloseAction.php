@@ -33,7 +33,7 @@ class CloseAction implements Action {
 			return new PageForward('error');
 		} else {
 			$this->votingAdminService->close($voting);
-			return new PageForward('edit_closed');
+			return new ActionForward('ShowResultAction');
 		}
 	}
 	
