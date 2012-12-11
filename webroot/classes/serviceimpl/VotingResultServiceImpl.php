@@ -3,31 +3,20 @@
 class VotingResultServiceImpl extends DbServiceBase implements VotingResultService {
 
 	/**
-	 * @var UserService
-	 */
-	private $userService;
-	
-	public function __construct(Database $db, UserService $userService) {
-		parent::__construct($db);
-		//$this->userService = $userService;
-	}
-	
-	/**
 	 * TODO copy documentation
 	 */
 	public function getResult(Voting $voting) {
-		$query = QueryBuilder::create()
+		$innerQuery = QueryBuilder::create()
 			->select('fk_answer')->select('COUNT(id) AS cnt')
 			->from('privatevoting_vote')
 			->where('fk_voting=?',$voting->getId())
-			->groupBy('fk_answer')
+			->groupBy('fk_answer');
+		$outerQuery = QueryBuilder::create()
+			->select('a.id')->select('a.title')->select('COALESCE(v.cnt,0) AS cnt')
+			->from('privatevoting_answer a')->leftJoin('? AS v ON (v.fk_answer=a.id)',$innerQuery)
+			->where('fk_voting=?',$voting->getId())
 			->orderByDesc('cnt');
-		$q2 = QueryBuilder::create()
-			->select('a.id')->select('a.title')->select('v.cnt')
-			->from('? AS v',$query)->join('privatevoting_answer a ON (v.fk_answer=a.id)');
-		return $this->db->queryAssocTable($q2);
-		// select fk_answer,count(id) as cnt from privatevoting_vote where fk_voting=1 group by fk_answer order by cnt desc;
-		
+		return $this->db->queryAssocTable($outerQuery);
 	}
 	
 }
