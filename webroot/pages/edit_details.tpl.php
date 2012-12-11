@@ -43,7 +43,7 @@
 		<input type="button" onclick="if(confirm('Biztosan lezárod a szavazást?')){submitForm($('form#edit_close'));}" value="Lezárás"/>
 	</form>
 	<form id="edit_delete" action="index.php" method="post" class="voteform onebutton">
-		<input type="hidden" name="do" value="Delete"/>
+		<input type="hidden" name="do" value="ConfirmDelete"/>
 		<input type="hidden" name="id" value="<?h($request->getData('voting')->getId())?>"/>
 		<input type="button" onclick="submitForm($('form#edit_delete'));" value="Törlés"/>
 	</form>
