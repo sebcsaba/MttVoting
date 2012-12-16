@@ -16,6 +16,10 @@ class DummyUserService implements UserService {
 	 * @return User or null
 	 */
 	public function authenticate() {
+		/*if (I(getallheaders(),'X-Requested-With')=='XMLHttpRequest') {
+			return null;
+		}*/
+		//return null;
 		return $this->users[0];
 	}
 	
@@ -26,9 +30,9 @@ class DummyUserService implements UserService {
 	 * @return User[]
 	 */
 	public function findUsersByName($name) {
-		return $this->findUsers(function(User $user){
+		return $this->findUsers(function(User $user, $name){
 			return FALSE !== strpos($user->getLoginName(), $name);
-		});
+		}, $name);
 	}
 	
 	/**
@@ -53,15 +57,15 @@ class DummyUserService implements UserService {
 	 * @return User[]
 	 */
 	public function findUsersByIds(array $ids) {
-		return $this->findUsers(function(User $user){
+		return $this->findUsers(function(User $user, array $ids){
 			return in_array($user->getUserId(), $ids);
-		});
+		}, $ids);
 	}
 	
-	private function findUsers($callback) {
+	private function findUsers($callback, $param) {
 		$result = array();
 		foreach ($this->users as $user) {
-			if ($callback($user)) {
+			if ($callback($user, $param)) {
 				$result[] = $user;
 			}
 		}
