@@ -13,7 +13,9 @@
 	<link rel="stylesheet" href="http://www.tolkien.hu/templates/tolkienhu/css/template.css" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="http://www.tolkien.hu/components/com_agora/style/Pyxes.css" />
 <link rel="stylesheet" href="resources/style.css" />
+<link rel="stylesheet" href="resources/jquery-ui-1.9.2.custom.min.css" />
 <script type="text/javascript" src="resources/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="resources/jquery-ui-1.9.2.custom.min.js"></script>
 <script type="text/javascript" src="resources/privatevoting.js"></script>
 </head>
 <body>
