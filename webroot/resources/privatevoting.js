@@ -50,3 +50,26 @@ function addNewAnswerField() {
 	result.insertBefore(pt);
 	result.focus();
 }
+
+function onSelectNewParticipant(userId, userName) {
+	var pt = $('#participant_prototype');
+	var index = pt.parent().children('li').length-1;
+	var result = pt.clone();
+	result.removeAttr('id');
+	result.children('span').html(userName);
+	var input = result.children('input');
+	input.attr('name','participant['+index+']');
+	input.attr('value',userId);
+	result.insertBefore(pt);
+}
+
+function participantSearchInit() {
+	$('#participant_search').autocomplete({
+		source: 'index.php?do=UserSearch',
+		select: function(event,selected) {
+			onSelectNewParticipant(selected.item.value, selected.item.label);
+			$(event.target).val('');
+			event.preventDefault();
+		}
+	});
+}

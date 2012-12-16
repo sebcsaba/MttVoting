@@ -13,6 +13,17 @@
 				<td><textarea class="full" name="description"><?h($request->getData('voting')->getDescription())?></textarea></td>
 			</tr>
 			<tr>
+				<td class="label">Lehetséges válaszok:</td>
+				<td>
+					<ul>
+						<? foreach ($request->getData('voting')->getAnswers() as $answer) { ?>
+							<li><?h($answer)?></li>
+						<? } ?>
+					</ul>
+					<input type="text" name="answer_pt" id="answer_prototype" class="full" onfocus="addNewAnswerField();"/>
+				</td>
+			</tr>
+			<tr>
 				<td colspan="2">
 					<p>
 						<? if ($request->getData('voting')->getPrivate()) { ?>
@@ -25,12 +36,19 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Lehetséges válaszok:</td>
+				<td class="label">Résztvevők:</td>
 				<td>
-					<? foreach ($request->getData('voting')->getAnswers() as $answer) { ?>
-						<p><?h($answer)?></p>
-					<? } ?>
-					<input type="text" name="answer_pt" id="answer_prototype" class="full" onfocus="addNewAnswerField();"/>
+					<ul>
+						<? foreach ($request->getData('voting')->getParticipants() as $participant) { ?>
+							<li><?h($participant->getUser()->getLoginName())?></li>
+						<? } ?>
+						<li id="participant_prototype">
+							<span>Participant name</span>
+							<input type="hidden"/>
+						</li>
+					</ul>
+					<input type="text" id="participant_search" class="full"/>
+					<script type="text/javascript">participantSearchInit();</script>
 				</td>
 			</tr>
 		</table>

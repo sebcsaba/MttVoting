@@ -12,6 +12,12 @@
 				<td><textarea class="full" name="description"></textarea></td>
 			</tr>
 			<tr>
+				<td class="label">Lehetséges válaszok:</td>
+				<td>
+					<input type="text" name="answer_pt" id="answer_prototype" class="full" onfocus="addNewAnswerField();"/>
+				</td>
+			</tr>
+			<tr>
 				<td colspan="2">
 					<div class="answer">
 						<input type="radio" name="private" value="0" id="private_0"/>
@@ -26,9 +32,16 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Lehetséges válaszok:</td>
+				<td class="label">Résztvevők:</td>
 				<td>
-					<input type="text" name="answer_pt" id="answer_prototype" class="full" onfocus="addNewAnswerField();"/>
+					<ul>
+						<li id="participant_prototype">
+							<span>Participant name</span>
+							<input type="hidden"/>
+						</li>
+					</ul>
+					<input type="text" id="participant_search" class="full"/>
+					<script type="text/javascript">participantSearchInit();</script>
 				</td>
 			</tr>
 		</table>
