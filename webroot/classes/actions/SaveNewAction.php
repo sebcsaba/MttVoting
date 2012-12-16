@@ -7,7 +7,8 @@ class SaveNewAction extends SaveActionBase implements Action {
 	 */
 	private $votingAdminService;
 	
-	public function __construct(VotingAdminService $votingAdminService) {
+	public function __construct(UserService $userService, VotingAdminService $votingAdminService) {
+		parent::__construct($userService);
 		$this->votingAdminService = $votingAdminService;
 	}
 	
@@ -35,7 +36,7 @@ class SaveNewAction extends SaveActionBase implements Action {
 			null,
 			$this->getBooleanRadioField($request, 'private', 'Válaszd ki, hogy publikus vagy privát lesz-e a szavazás!'),
 			$this->getAnswers($request, 2),
-			array());
+			$this->getParticipants($request));
 	}
 	
 	private function getBooleanRadioField(Request $request, $fieldName, $errorMessage) {

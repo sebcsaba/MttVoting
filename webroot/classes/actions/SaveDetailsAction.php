@@ -12,7 +12,8 @@ class SaveDetailsAction extends SaveActionBase implements Action {
 	 */
 	private $votingListingService;
 
-	public function __construct(VotingAdminService $votingAdminService, VotingListingService $votingListingService) {
+	public function __construct(UserService $userService, VotingAdminService $votingAdminService, VotingListingService $votingListingService) {
+		parent::__construct($userService);
 		$this->votingAdminService = $votingAdminService;
 		$this->votingListingService = $votingListingService;
 	}
@@ -47,7 +48,7 @@ class SaveDetailsAction extends SaveActionBase implements Action {
 			null,
 			$originalVoting->getPrivate(),
 			$this->getAnswers($request, 0),
-			array());
+			$this->getParticipants($request));
 	}
 	
 }
