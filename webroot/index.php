@@ -10,8 +10,8 @@ $autoloader->addDirectory('classes');
 $config = new Config(require_once('config/config.php'));
 
 $di = new DI($config->get('di'));
-$di->setSingleton($config);
-$di->setSingleton(DbConnectionParameters::createFromArray($config->get('db')));
+$di->setInstance($config);
+$di->setInstance(DbConnectionParameters::createFromArray($config->get('db')));
 
 $handler = $di->create('RequestHandler');
 $handler->run();

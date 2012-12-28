@@ -26,9 +26,6 @@ return config_merge(array(
 			'DbDialect' => 'MySqlDbDialect',
 			'DbEngine' => 'MySqlDbEngine',
 		),
-		'singletons' => array(
-			'DbConnectionParameters',
-		),
 	),
 
 ),require_once('config.local.php'));

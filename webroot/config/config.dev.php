@@ -9,10 +9,6 @@ return array(
 			'AuthenticationService' => 'DummyUserService',
 		),
 
-		'singletons' => array(
-			'DummyUserService',
-		),
-	
 	),
 	
 );
