@@ -2,6 +2,9 @@
 
 abstract class SaveActionBase implements Action {
 	
+	/**
+	 * @var UserService
+	 */
 	protected $userService;
 	
 	public function __construct(UserService $userService) {

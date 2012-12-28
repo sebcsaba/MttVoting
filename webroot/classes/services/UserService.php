@@ -3,11 +3,6 @@
 interface UserService {
 
 	/**
-	 * @return User or null
-	 */
-	public function authenticate();
-	
-	/**
 	 * Find users who contains the given search string in theirs name
 	 * 
 	 * @param string $name

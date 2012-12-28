@@ -3,9 +3,9 @@
 class RequestHandler {
 	
 	/**
-	 * @var UserService
+	 * @var AuthenticationService
 	 */
-	private $userService;
+	private $authenticationService;
 	
 	/**
 	 * @var ApplicationHandler
@@ -22,8 +22,8 @@ class RequestHandler {
 	 */
 	private $di;
 	
-	public function __construct(UserService $userService, ApplicationHandler $applicationHandler, Database $database, DI $di) {
-		$this->userService = $userService;
+	public function __construct(AuthenticationService $authenticationService, ApplicationHandler $applicationHandler, Database $database, DI $di) {
+		$this->authenticationService = $authenticationService;
 		$this->applicationHandler = $applicationHandler;
 		$this->database = $database;
 		$this->di = $di;
@@ -32,7 +32,7 @@ class RequestHandler {
 	public function run() {
 		try {
 			$this->database->startTransaction();
-			$user = $this->userService->authenticate();
+			$user = $this->authenticationService->authenticate();
 			$request = $this->parseRequest($user);
 			$forward = $this->applicationHandler->parseInitialForward($request);
 			do {

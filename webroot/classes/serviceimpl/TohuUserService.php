@@ -1,22 +1,10 @@
 <?php
 
-// TODO check db names: tables, fields
 class TohuUserService extends DbServiceBase implements UserService {
 	
-	/**
-	 * @return User or null
-	 */
-	public function authenticate() {
-		if (!isset($_COOKIE['phpbb3_1pabk_sid'])) return null;
-		$sessionId = $_COOKIE['phpbb3_1pabk_sid'];
-		// TODO
-		$query = QueryBuilder::create()->from('session');
-		$userId = $this->db->queryCell($query);
-		
-		$queryUser = QueryBuilder::create()->from('users')->where('id = ?', $userId);
-		$row = $this->db->queryRow($query);
-		return new User($row['id'], $row['name']);
-	}
+	const USERS_TABLE = 'jos_users';
+	const USERS_NAME_FIELD = 'name';
+	const USERS_ID_FIELD = 'id';
 	
 	/**
 	 * Find users who contains the given search string in theirs name
@@ -25,7 +13,7 @@ class TohuUserService extends DbServiceBase implements UserService {
 	 * @return User[]
 	 */
 	public function findUsersByName($name) {
-		$query = QueryBuilder::create()->from('users')->where('name ilike ?', '%'.$name.'%');
+		$query = QueryBuilder::create()->from(self::USERS_TABLE)->where(self::USERS_NAME_FIELD.' LIKE ? COLLATE utf8_general_ci', '%'.$name.'%');
 		return $this->loadUsers($query);
 	}
 	
@@ -36,12 +24,12 @@ class TohuUserService extends DbServiceBase implements UserService {
 	 * @return User or null
 	 */
 	public function findUserById($id) {
-		$query = QueryBuilder::create()->from('users')->where('id=?', $id);
+		$query = QueryBuilder::create()->from(self::USERS_TABLE)->where(self::USERS_ID_FIELD.'=?', $id);
 		$row = $this->db->queryRow($query, true);
 		if (is_null($row)) {
 			return null;
 		} else {
-			return new User($row['id'], $row['name']);
+			return new User($row[self::USERS_ID_FIELD], $row[self::USERS_NAME_FIELD]);
 		}
 	}
 	
@@ -50,7 +38,7 @@ class TohuUserService extends DbServiceBase implements UserService {
 	 * @return User[]
 	 */
 	public function findUsersByIds(array $ids) {
-		$query = QueryBuilder::create()->from('users')->where('id in (?)', join(',', $ids));
+		$query = QueryBuilder::create()->from(self::USERS_TABLE)->where(self::USERS_ID_FIELD.' in (?)', join(',', $ids));
 		return $this->loadUsers($query);
 	}
 	
@@ -63,7 +51,7 @@ class TohuUserService extends DbServiceBase implements UserService {
 	private function loadUsers(QueryBuilder $query) {
 		$result = array();
 		foreach ($this->db->query($query) as $row) {
-			$result []= new User($row['id'], $row['name']);
+			$result []= new User($row[self::USERS_ID_FIELD], $row[self::USERS_NAME_FIELD]);
 		}
 		return $result;
 	}

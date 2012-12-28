@@ -12,6 +12,7 @@ return config_merge(array(
 	'impl' => array(
 		'ApplicationHandler' => 'ApplicationHandlerImpl',
 		'UserService' => 'TohuUserService',
+		'AuthenticationService' => 'TohuAuthenticationService',
 		'VotingListingService' => 'VotingListingServiceImpl',
 		'VotingAdminService' => 'VotingAdminServiceImpl',
 		'VotingService' => 'VotingServiceImpl',

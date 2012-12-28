@@ -23,7 +23,7 @@ class DbException extends Exception {
 			return $errorMessage;
 		} else {
 			$params = implode_assoc($query->convertToParamsArray(),'=','',';');
-			return sprintf('%s on executing %s with parameters %s', $errorMessage, $query->convertToString(), $params);
+			return sprintf('%s on executing %s with parameters [%s]', $errorMessage, $query->convertToString(), $params);
 		}
 	}
 

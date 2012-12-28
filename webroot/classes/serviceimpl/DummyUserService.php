@@ -1,6 +1,6 @@
 <?php
 
-class DummyUserService implements UserService {
+class DummyUserService implements UserService, AuthenticationService {
 	
 	private $users;
 	
