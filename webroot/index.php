@@ -9,7 +9,7 @@ $autoloader->addDirectory('classes');
 
 $config = new Config(require_once('config/config.php'));
 
-$di = new DI($config->get('impl'), $config->get('singletons'));
+$di = new DI($config->get('di'));
 $di->setSingleton($config);
 $di->setSingleton(DbConnectionParameters::createFromArray($config->get('db')));
 

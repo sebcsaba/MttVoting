@@ -2,13 +2,17 @@
 
 return array(
 
-	'impl' => array(
-		'UserService' => 'DummyUserService',
-		'AuthenticationService' => 'DummyUserService',
-	),
+	'di' => array(
 
-	'singletons' => array(
-		'DummyUserService',
+		'impl' => array(
+			'UserService' => 'DummyUserService',
+			'AuthenticationService' => 'DummyUserService',
+		),
+
+		'singletons' => array(
+			'DummyUserService',
+		),
+	
 	),
 	
 );

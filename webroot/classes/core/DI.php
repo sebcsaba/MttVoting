@@ -6,12 +6,13 @@ class DI {
 	private $singletons;
 
 	/**
-	 * @param array $implementationClasses (interfaceClassName => implementationClassName)
-	 * @param array $singletonClasses (? => implementationClassName)
+	 * @param array $config Configuration parameters, containing the following items:
+	 *     'impl': array(interfaceClassName => implementationClassName)
+	 *     'singletons': array(? => implementationClassName)
 	 */
-	public function __construct(array $implementationClasses, array $singletonClasses) {
-		$this->implementationClasses = $implementationClasses;
-		$this->singletons = $this->initSingletonArray($singletonClasses);
+	public function __construct(array $config) {
+		$this->implementationClasses = I($config,'impl');
+		$this->singletons = I($config,'singletons');
 	}
 	
 	private function initSingletonArray($singletonClasses) {
