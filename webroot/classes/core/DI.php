@@ -4,12 +4,13 @@
  * Dependency Injector tool.
  * When creating instance (by the get() method), the following steps are used:
  *   1) If the required class is DI, return this object.
- *   2) If there's some special handling defined for the requested class or interface, use that.
- *   3) Lookup for the implementation classname for the given interface.
- *   4) If there's some special handling defined for the requested implementation class, use that.
- *   5) If the implementation class is marked non-singleton, or no previous instance created, create a new one.
- *   6) If the implementation class is marked non-singleton, store the created implementation instance.
- *   7) Return the instance
+ *   2) If the instance is available in the additional instances array, return that.
+ *   3) If there's some special handling defined for the requested class or interface, use that.
+ *   4) Lookup for the implementation classname for the given interface.
+ *   5) If there's some special handling defined for the requested implementation class, use that.
+ *   6) If the implementation class is marked non-singleton, or no previous instance created, create a new one. (Use the additional instances for recursion.)
+ *   7) If the implementation class is marked non-singleton, store the created implementation instance.
+ *   8) Return the instance
  *   
  * @author sebcsaba
  */
@@ -62,35 +63,45 @@ class DI {
 		$this->instances[$interfaceName] = $instance;
 	}
 	
-	public function get($interfaceOrClassName) {
+	/**
+	 * Returns an instance for the given interface or class name.
+	 * 
+	 * @param string $interfaceOrClassName Name of the interface of class to instantiate or return the previously instantiated instance
+	 * @param array $additionalInstances array(string classname => object instance) array (string classname => object instance)
+	 */
+	public function get($interfaceOrClassName, array $additionalInstances = array()) {
 		// 1) If the required class is DI, return this object.
 		if ($interfaceOrClassName=='DI') {
 			return $this;
 		}
-		// 2) If there's some special handling defined for the requested class or interface, use that.
+		// 2) If the instance is available in the additional instances array, return that.
+		if (array_key_exists($interfaceOrClassName, $additionalInstances)) {
+			return $additionalInstances[$interfaceOrClassName];
+		}
+		// 3) If there's some special handling defined for the requested class or interface, use that.
 		$instance = $this->checkSpecial($interfaceOrClassName);
 		if (!is_null($instance)) {
 			$this->setInstance($instance, $interfaceOrClassName);
 			return $instance;
 		}
-		// 3) Lookup for the implementation classname for the given interface.
+		// 4) Lookup for the implementation classname for the given interface.
 		$className = I($this->implementationClassNames, $interfaceOrClassName, $interfaceOrClassName);
-		// 4) If there's some special handling defined for the requested implementation class, use that.
+		// 5) If there's some special handling defined for the requested implementation class, use that.
 		$instance = $this->checkSpecial($className);
 		if (!is_null($instance)) {
 			$this->setInstance($instance, $interfaceOrClassName);
 			return $instance;
 		}
 		$instance = I($this->instances, $className);
-		// 5) If the implementation class is marked non-singleton, or no previous instance created, create a new one.
+		// 6) If the implementation class is marked non-singleton, or no previous instance created, create a new one. (Use the additional instances for recursion.)
 		if (is_null($instance) || array_key_exists($className, $this->nonsingletonClassNames)) {
-			$instance = $this->instantiate($className);
+			$instance = $this->instantiate($className, $additionalInstances);
 		}
-		// 6) If the implementation class is marked non-singleton, store the created implementation instance.
+		// 7) If the implementation class is marked non-singleton, store the created implementation instance.
 		if (!array_key_exists($className, $this->nonsingletonClassNames)) {
 			$this->setInstance($instance, $interfaceOrClassName);
 		}
-		// 7) Return the instance
+		// 8) Return the instance
 		return $instance;
 	}
 	
@@ -111,13 +122,13 @@ class DI {
 		throw new Exception('unknown special handler for '.$className);
 	}
 	
-	private function instantiate($className) {
+	private function instantiate($className, array $additionalInstances) {
 		$class = new ReflectionClass($className);
 		$constructor = $class->getConstructor();
 		$args = array();
 		if (!is_null($constructor)) {
 			foreach ($constructor->getParameters() as $param) {
-				$args []= $this->get($param->getClass()->name);
+				$args []= $this->get($param->getClass()->name, $additionalInstances);
 			}
 		}
 		return $class->newInstanceArgs($args);
