@@ -36,7 +36,12 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Résztvevők:</td>
+				<td class="label">
+					Résztvevők:
+					<span class="footnote">
+						(Ha legalább 3 karaktert megadsz, megjelenik egy lista amiből válaszhatsz.)
+					</span>
+				</td>
 				<td>
 					<ul>
 						<? foreach ($request->getData('voting')->getParticipants() as $participant) { ?>

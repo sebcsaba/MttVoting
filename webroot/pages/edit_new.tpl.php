@@ -32,7 +32,12 @@
 				</td>
 			</tr>
 			<tr>
-				<td class="label">Résztvevők:</td>
+				<td class="label">
+					Résztvevők:
+					<span class="footnote">
+						(Ha legalább 3 karaktert megadsz, megjelenik egy lista amiből válaszhatsz.)
+					</span>
+				</td>
 				<td>
 					<ul>
 						<li id="participant_prototype">

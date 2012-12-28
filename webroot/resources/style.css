@@ -28,6 +28,8 @@ form.onebutton {
 
 .footnote {
 	font-size: 0.7em;
+	display: block;
+	clear: left;
 }
 
 #participant_prototype {
