@@ -48,13 +48,8 @@
 
 				<div id="position-category">
 					<div id="pc-both">
-						<div class="moduletable">
-							<ul id="mainlevel">
-								<? foreach ($request->getData('interestingFor') as $voting) { ?>
-									<li><a href="javascript:openPage('Voting',{id:<?h($voting->getId())?>})"><?h($voting->getTitle())?></a></li>
-								<? } ?>
-								<li><a href="javascript:openPage('AllFor')">- Összes -</a></li>
-							</ul>
+						<div class="moduletable" id="left-menu-for-privatevoting">
+							<? require_once('leftmenu.tpl.php'); ?>
 						</div>
 
 					</div>

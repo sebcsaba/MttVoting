@@ -79,5 +79,7 @@ function participantSearchInit() {
 }
 
 function reloadLeftMenu(){
-//	alert('now reload left menu');
+	myAjax({'do':'ShowLeftMenu'},function(data){
+		$('#left-menu-for-privatevoting').html(data);
+	});
 }
