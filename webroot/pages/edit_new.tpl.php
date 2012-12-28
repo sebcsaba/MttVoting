@@ -38,6 +38,7 @@
 						<li id="participant_prototype">
 							<span>Participant name</span>
 							<input type="hidden"/>
+							<i class="delete_icon" onclick="onDeleteNewParticipant(this);"/>
 						</li>
 					</ul>
 					<input type="text" id="participant_search" class="full"/>

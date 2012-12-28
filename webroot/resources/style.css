@@ -38,3 +38,12 @@ form.onebutton {
 	background: none;
 	padding: 5px;
 }
+
+.delete_icon {
+	display: block;
+	float: left;
+	width: 16px;
+	height: 16px;
+	background-image: url('images/ui-icons_222222_256x240.png');
+	background-position: -96px -128px;
+}

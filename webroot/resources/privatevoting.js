@@ -53,18 +53,22 @@ function addNewAnswerField() {
 
 function onSelectNewParticipant(userId, userName) {
 	var pt = $('#participant_prototype');
-	var index = pt.parent().children('li').length-1;
 	var result = pt.clone();
 	result.removeAttr('id');
 	result.children('span').html(userName);
 	var input = result.children('input');
-	input.attr('name','participant['+index+']');
+	input.attr('name','participant[]');
 	input.attr('value',userId);
 	result.insertBefore(pt);
 }
 
+function onDeleteNewParticipant(icon) {
+	$(icon).parent().remove();
+}
+
 function participantSearchInit() {
 	$('#participant_search').autocomplete({
+		minLength: 3,
 		source: 'index.php?do=UserSearch',
 		select: function(event,selected) {
 			onSelectNewParticipant(selected.item.value, selected.item.label);
