@@ -4,6 +4,7 @@ return config_merge(array(
 
 	'url' => '',
 	'authentication_url' => '',
+	'joomla_config_file' => '',
 
 	'db' => array(
 		'protocol' => 'mysql',
