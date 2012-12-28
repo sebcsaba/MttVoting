@@ -2,7 +2,7 @@
 
 /**
  * Dependency Injector tool.
- * When creating instance (by the create() method), the following steps are used:
+ * When creating instance (by the get() method), the following steps are used:
  *   1) If the required class is DI, return this object.
  *   2) If there's some special handling defined for the requested class or interface, use that.
  *   3) Lookup for the implementation classname for the given interface.
@@ -62,7 +62,7 @@ class DI {
 		$this->instances[$interfaceName] = $instance;
 	}
 	
-	public function create($interfaceOrClassName) {
+	public function get($interfaceOrClassName) {
 		// 1) If the required class is DI, return this object.
 		if ($interfaceOrClassName=='DI') {
 			return $this;
@@ -117,7 +117,7 @@ class DI {
 		$args = array();
 		if (!is_null($constructor)) {
 			foreach ($constructor->getParameters() as $param) {
-				$args []= $this->create($param->getClass()->name);
+				$args []= $this->get($param->getClass()->name);
 			}
 		}
 		return $class->newInstanceArgs($args);

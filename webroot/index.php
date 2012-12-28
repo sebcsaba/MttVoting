@@ -13,5 +13,5 @@ $di = new DI($config->get('di'));
 $di->setInstance($config);
 $di->setInstance(DbConnectionParameters::createFromArray($config->get('db')));
 
-$handler = $di->create('RequestHandler');
+$handler = $di->get('RequestHandler');
 $handler->run();

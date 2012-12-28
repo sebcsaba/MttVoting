@@ -63,7 +63,7 @@ class RequestHandler {
 			return null;
 		} else if ($forward instanceof ActionForward) {
 			$className = $forward->getClassName();
-			$action = $this->di->create($className);
+			$action = $this->di->get($className);
 			return $action->serve($request);
 		} else if ($forward instanceof ErrorForward) {
 			header('X-Error: '.$this->encodeHeader($forward->getMessage()));
