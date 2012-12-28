@@ -66,3 +66,6 @@
 		<input type="button" onclick="submitForm($('form#edit_delete'));" value="Törlés"/>
 	</form>
 </div>
+<? if ($request->getData('reload_leftmenu')) { ?>
+	<script type="text/javascript">reloadLeftMenu();</script>
+<? } ?>

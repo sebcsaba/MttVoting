@@ -73,3 +73,7 @@ function participantSearchInit() {
 		}
 	});
 }
+
+function reloadLeftMenu(){
+//	alert('now reload left menu');
+}

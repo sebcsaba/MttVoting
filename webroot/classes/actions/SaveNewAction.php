@@ -21,6 +21,7 @@ class SaveNewAction extends SaveActionBase implements Action {
 			$voting = $this->convertToVoting($request);
 			$id = $this->votingAdminService->create($voting);
 			$request->set('id', $id);
+			$request->setData('reload_leftmenu',true);
 			return new ActionForward('ShowEditVotingAction');
 		} catch (ValidationException $ex) {
 			return new ErrorForward($ex->getMessage());
