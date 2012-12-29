@@ -26,6 +26,21 @@ return config_merge(array(
 			'DbDialect' => 'MySqlDbDialect',
 			'DbEngine' => 'MySqlDbEngine',
 		),
+		'nonsingletons' => array(
+			'DbEngine'
+		),
+		'specials' => array(
+			'ToHuDatabase' => function(DI $di, $interfaceName, $className){
+				$config = $di->get('Config');
+				$params = DbConnectionParameters::createFromArray($config->get('tohu_db'));
+				return new ToHuDatabase($di->get('DbEngine',array('DbConnectionParameters'=>$params)));
+			},
+			'Database' => function(DI $di, $interfaceName, $className){
+				$config = $di->get('Config');
+				$params = DbConnectionParameters::createFromArray($config->get('db'));
+				return new ToHuDatabase($di->get('DbEngine',array('DbConnectionParameters'=>$params)));
+			},
+		),
 	),
 
 ),require_once('config.local.php'));

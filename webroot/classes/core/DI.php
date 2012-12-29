@@ -144,7 +144,10 @@ class DI {
 		$constructor = $class->getConstructor();
 		$args = array();
 		if (!is_null($constructor)) {
-			foreach ($constructor->getParameters() as $param) {
+			foreach ($constructor->getParameters() as $i=>$param) {
+				if (!($param->getClass() instanceof ReflectionClass)) {
+					throw new Exception('unable to instantiate '.$className.': parameter '.$i.' has no type-constraint');
+				}
 				$args []= $this->get($param->getClass()->name, $additionalInstances);
 			}
 		}

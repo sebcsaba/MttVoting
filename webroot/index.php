@@ -11,7 +11,6 @@ $config = new Config(require_once('config/config.php'));
 
 $di = new DI($config->get('di'));
 $di->setInstance($config);
-$di->setInstance(DbConnectionParameters::createFromArray($config->get('db')));
 
 $handler = $di->get('RequestHandler');
 $handler->run();
