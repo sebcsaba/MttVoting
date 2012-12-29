@@ -2,6 +2,10 @@
 
 return config_merge(require_once('config.dev.php'),array(
 
+	'url' => 'http://localhost/projects/MttVoting/webroot/',
+	'authentication_url' => 'http://www.tolkien.hu/index.php?option=com_user&view=login&return=x',
+	'joomla_config_file' => '../ignored_items/joomla_configuration.php',
+	
 	'db' => array(
 		'protocol' => 'mysql',
 		'host' => 'localhost',
