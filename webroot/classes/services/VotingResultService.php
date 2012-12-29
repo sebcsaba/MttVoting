@@ -10,6 +10,8 @@ interface VotingResultService {
 	 *     id: id of the answer
 	 *     title: title of the answer
 	 *     cnt: number of votes for the answer
+	 * If the voting is public, an additional key exists:
+	 *     users: array of the usernames who voted for this answer
 	 * Thre result is ordered by the 'cnt' field, descendant.
 	 *
 	 * @param Voting $voting

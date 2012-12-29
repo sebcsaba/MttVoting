@@ -5,6 +5,11 @@
 		<div class="answer">
 			<?h($result['title'])?>:
 			<?h($result['cnt'])?>
+			<? if (!$request->getData('voting')->getPrivate()) { ?>
+				<span>
+					(<?h(implode(', ', $result['users']))?>)
+				</span>
+			<? } ?>
 		</div>
 	<? } ?>
 </div>
