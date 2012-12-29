@@ -2,6 +2,6 @@
 
 interface DISpecialHandler {
 	
-	public function create(DI $di, $className);
+	public function create(DI $di, $interfaceName, $className);
 	
 }
