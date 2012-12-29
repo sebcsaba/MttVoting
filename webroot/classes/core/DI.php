@@ -77,12 +77,13 @@ class DI {
 	 *         exceptions, the non-singletons. As above, when looking for the instance, search for the interface name
 	 *         first, and then the classname.
 	 *   5) If there's some special handling defined for the requested class or interface, use that for the next steps.
-	 *         When the additional instances gives some declarative override feature, this gives a programmatic way.
-	 *         As above, when looking for the instance, search for the interface name first, and then the classname.
-	 *         The object returned by the given handler will be used for the next steps.
+	 *         This step will be skipped, if the $useSpecialHandlers parameter is false. When the additional instances
+	 *         gives some declarative override feature, this gives a programmatic way. As above, when looking for the
+	 *         instance, search for the interface name first, and then the classname. The object returned by the given
+	 *         handler will be used for the next steps.
 	 *   6) If no instance found at the previous step, instantiate now. This is the only point when new object is
 	 *         instantiated. If the implementation class needs parameters for the constructor, goes recursively to
-	 *         step 1, and transfer the additional instances.
+	 *         step 1. Transfers the additional instances, but not the value of the $useSpecialHandlers parameter.
 	 *   7) If the class name is not marked as non-singleton, store the created implementation instance. As above, when
 	 *         looking for the instance, search for the interface name first, and then the classname. When storing, use
 	 *         both the interface and the class name. This functionality is the same as setInstance().
@@ -90,9 +91,10 @@ class DI {
 	 * 
 	 * @param string $interface Name of the interface that the returned object must be instance of.
 	 * @param array $additionalInstances array(classname=>instance) Additional instances to prevent creating new ones.
+	 * @param boolean $useSpecialHandlers If true, use step 5.
 	 * @return object
 	 */
-	public function get($interface, array $additionalInstances = array()) {
+	public function get($interface, array $additionalInstances = array(), $useSpecialHandlers = true) {
 		// 1) If the required class is DI, return this object.
 		if ($interface=='DI') {
 			return $this;
@@ -112,9 +114,11 @@ class DI {
 		}
 		
 		// 5) If there's some special handling defined for the requested class or interface, use that for the next steps.
-		$handler = $this->lookup($interface, $class, $this->specialHandlers);
-		if (!is_null($handler)) {
-			$instance = $this->applyHandler($handler, $interface, $class);
+		if ($useSpecialHandlers) {
+			$handler = $this->lookup($interface, $class, $this->specialHandlers);
+			if (!is_null($handler)) {
+				$instance = $this->applyHandler($handler, $interface, $class);
+			}
 		}
 		
 		// 6) If no instance found at the previous step, instantiate now.
