@@ -6,6 +6,10 @@ class TohuUserService extends DbServiceBase implements UserService {
 	const USERS_NAME_FIELD = 'name';
 	const USERS_ID_FIELD = 'id';
 	
+	public function __construct(ToHuDatabase $db) {
+		parent::__construct($db);
+	}
+	
 	/**
 	 * Find users who contains the given search string in theirs name
 	 * 

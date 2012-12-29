@@ -16,7 +16,7 @@ class TohuAuthenticationService extends DbServiceBase implements AuthenticationS
 	 */
 	private $config;
 	
-	public function __construct(Database $db, UserService $userService, Config $config) {
+	public function __construct(ToHuDatabase $db, UserService $userService, Config $config) {
 		parent::__construct($db);
 		$this->userService = $userService;
 		$this->config = $config;
