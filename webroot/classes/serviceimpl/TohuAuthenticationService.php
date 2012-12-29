@@ -26,11 +26,6 @@ class TohuAuthenticationService extends DbServiceBase implements AuthenticationS
 	 * @return User or null
 	 */
 	public function authenticate() {
-		
-		// TODO remove hack - begin
-		$_COOKIE['3d964a10994854ad28e84c661a331538']='51df771c35d0df1307fb5c7619d528b6';
-		// TODO remove hack - end
-		
 		$sessionId = $this->getJoomlaSessionId();
 		if (is_null($sessionId)) {
 			return null;
@@ -39,7 +34,7 @@ class TohuAuthenticationService extends DbServiceBase implements AuthenticationS
 		$userId = $this->db->queryCell(QueryBuilder::create()
 			->from(self::SESSIONS_TABLE)
 			->where(self::SESSIONS_ID_FIELD.'=?', $sessionId)
-			->select(self::SESSIONS_USERID_FIELD));
+			->select(self::SESSIONS_USERID_FIELD), null, true);
 		if (is_null($userId) || $userId==0) {
 			return null;
 		}
