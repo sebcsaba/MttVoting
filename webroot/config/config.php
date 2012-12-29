@@ -30,16 +30,8 @@ return config_merge(array(
 			'DbEngine'
 		),
 		'specials' => array(
-			'ToHuDatabase' => function(DI $di, $interfaceName, $className){
-				$config = $di->get('Config');
-				$params = DbConnectionParameters::createFromArray($config->get('tohu_db'));
-				return new ToHuDatabase($di->get('DbEngine',array('DbConnectionParameters'=>$params)));
-			},
-			'Database' => function(DI $di, $interfaceName, $className){
-				$config = $di->get('Config');
-				$params = DbConnectionParameters::createFromArray($config->get('db'));
-				return new ToHuDatabase($di->get('DbEngine',array('DbConnectionParameters'=>$params)));
-			},
+			'Database' => new DatabaseDIHandler(),
+			'ToHuDatabase' => new DatabaseDIHandler('tohu_db'),
 		),
 	),
 
