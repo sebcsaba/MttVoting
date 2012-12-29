@@ -26,8 +26,8 @@ class MySqlDbEngine extends DbEngine {
 	 */
 	protected function connect(DbConnectionParameters $params) {
 		$host = sprintf("%s:%d", $params->getHost(), coalesce($params->getPort(), 3306));
-		$this->conn = mysql_connect($host, $params->getUsername(), $params->getPassword());
-		mysql_select_db($params->getDatabase());
+		$this->conn = mysql_connect($host, $params->getUsername(), $params->getPassword(), true);
+		mysql_select_db($params->getDatabase(), $this->conn);
 	}
 	
 	/**
