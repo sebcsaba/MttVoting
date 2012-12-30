@@ -1,4 +1,4 @@
-function decoteString(input) {
+function decodeString(input) {
 	if (/^=\?UTF-8\?Q\?(.*)\?\=/.test(input)) {
 		return decodeURIComponent(input.substring(10,input.length-2).replace(/=/g,'%'));
 	} else {
@@ -15,7 +15,7 @@ function myAjax(data, realSuccess, method) {
 			if (xhr.getResponseHeader("X-Location")) {
 				document.location = xhr.getResponseHeader("X-Location");
 			} else if (xhr.getResponseHeader("X-Error")) {
-				alert(decoteString(xhr.getResponseHeader("X-Error")));
+				alert(decodeString(xhr.getResponseHeader("X-Error")));
 			} else {
 				realSuccess(data);
 			}
