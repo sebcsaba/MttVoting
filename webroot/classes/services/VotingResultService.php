@@ -19,4 +19,15 @@ interface VotingResultService {
 	 */
 	public function getResult(Voting $voting);
 	
+	/**
+	 * Return small statistics about the current status of the voting.
+	 * The result array contains the following key:
+	 *     'not-voted-count': number of the participants who haven't voted yet
+	 * If the voting is public, an additional key exists:
+	 *     'not-voted': array of the user names of the participants who haven't voted yet
+	 * @param Voting $voting
+	 * @return array
+	 */
+	public function getStatus(Voting $voting);
+	
 }

@@ -78,4 +78,43 @@ class VotingResultServiceImpl extends DbServiceBase implements VotingResultServi
 		return $result;
 	}
 	
+	/**
+	 * Return small statistics about the current status of the voting.
+	 * The result array contains the following key:
+	 *     'not-voted-count': number of the participants who haven't voted yet
+	 * If the voting is public, an additional key exists:
+	 *     'not-voted': array of the user names of the participants who haven't voted yet
+	 * @param Voting $voting
+	 * @return array
+	 */
+	public function getStatus(Voting $voting) {
+		$query = QueryBuilder::create()
+			->count()
+			->from('privatevoting_participant')
+			->where('fk_voting=?',$voting->getId())
+			->where('NOT voted');
+		$result = array(
+			'not-voted-count' => $this->db->queryCell($query),
+		);
+		if (!$voting->getPrivate()) {
+			$result['not-voted'] = $this->getNotVotedUserNames($voting);
+		}
+		return $result;
+	}
+	
+	private function getNotVotedUserNames(Voting $voting) {
+		$query = QueryBuilder::create()
+			->select('user_id')
+			->from('privatevoting_participant')
+			->where('fk_voting=?',$voting->getId())
+			->where('NOT voted');
+		$userIds = $this->db->queryColumn($query);
+		$users = $this->userService->findUsersByIds($userIds);
+		$result = array();
+		foreach ($users as $user) {
+			$result []= $user->getLoginName();
+		}
+		return $result;
+	}
+	
 }
