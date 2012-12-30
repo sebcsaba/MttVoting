@@ -26,9 +26,12 @@ function myAjax(data, realSuccess, method) {
 	});
 }
 
-function openPage(page,paramData) {
+function openPage(page,paramData,skipShowPrefix) {
 	if (!paramData) paramData = {};
-	paramData['do'] = 'Show'+page;
+	if (!skipShowPrefix) {
+		page = 'Show'+page;
+	}
+	paramData['do'] = page;
 	myAjax(paramData,function(data){
 		$('#central-content-for-privatevoting').html(data);
 	});
