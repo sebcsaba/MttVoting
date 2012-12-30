@@ -64,21 +64,7 @@
 					<div id="thcm-category-highlights">
 						<ul id="thcm-category-contents">
 							<li id="central-content-for-privatevoting">
-								<div class="thcm-fp-title">
-									Szavazás használata
-								</div>
-								<div class="content-list-introtext">
-									<p>
-										Ez itt az MTT vezetősége számára készített szavazóprogram.
-									</p>
-									<p>
-										A jobb oldali menüben tudsz szavazásokat létrehozni, a korábban létrehozottakat
-										adminisztrálni.
-									</p>
-									<p>
-										A bal oldalon látod a számodra elérhető aktív szavazásokat.
-									</p>
-								</div>
+								<? require_once('help.tpl.php'); ?>
 							</li>
 						</ul>
 					</div>
@@ -101,6 +87,7 @@
 					<div id="position-function">
 						<div class="moduletable_menu">
 							<ul class="menu">
+								<li><a href="javascript:openPage('Help')"><span>Nyitólap</span></a></li>
 								<li><a href="javascript:openPage('CreateNew')"><span>Új szavazás</span></a></li>
 								<li><a href="javascript:openPage('ActivesOf')"><span>Nyitottak</span></a></li>
 								<li><a href="javascript:openPage('AllOf')"><span>Összes</span></a></li>
