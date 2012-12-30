@@ -23,7 +23,7 @@ class ConfirmDeleteAction implements Action {
 			$request->setData('message', 'Nincs elérhető szavazás a megadott azonosítóval');
 			return new PageForward('error');
 		} else {
-			return new PageForward('delete');
+			return new PageForward('confirm_delete');
 		}
 	}
 	
