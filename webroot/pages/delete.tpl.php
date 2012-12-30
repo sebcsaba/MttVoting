@@ -8,5 +8,5 @@
 		<p>Biztosan törölni akarod ezt a szavazást?</p>
 		<input type="button" onclick="submitForm($('form#edit_delete'));" value="Igen, biztosan törlöm"/>
 	</form>
-	<p><a href="javascript:openPage('EditVoting',{id:<?h($request->getData('voting')->getId())?>})">Nem, inkább mégsem törlöm</a></p>
+	<p><input type="button" onclick="openPage('EditVoting',{id:<?h($request->getData('voting')->getId())?>})" value="Nem, inkább mégsem törlöm"/></p>
 </div>
