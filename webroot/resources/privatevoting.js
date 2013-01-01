@@ -73,6 +73,10 @@ function participantSearchInit() {
 	$('#participant_search').autocomplete({
 		minLength: 3,
 		source: 'index.php?do=UserSearch',
+		focus: function(event,focused) {
+			$(event.target).val(focused.item.label);
+			event.preventDefault();
+		},
 		select: function(event,selected) {
 			onSelectNewParticipant(selected.item.value, selected.item.label);
 			$(event.target).val('');
