@@ -5,7 +5,9 @@ return config_merge(array(
 	'url' => '',
 	'authentication_url' => '',
 	'joomla_config_file' => '',
-
+	
+	'lifecycle' => 'unknown', // values: production, development, test
+	
 	'db' => array(
 		'protocol' => 'mysql',
 	),

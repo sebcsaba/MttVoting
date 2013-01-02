@@ -2,6 +2,8 @@
 
 return array(
 
+	'lifecycle' => 'development',
+	
 	'di' => array(
 
 		'impl' => array(

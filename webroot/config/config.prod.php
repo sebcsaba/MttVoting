@@ -2,6 +2,8 @@
 
 return array(
 
+	'lifecycle' => 'production',
+	
 	'di' => array(
 
 		'impl' => array(
