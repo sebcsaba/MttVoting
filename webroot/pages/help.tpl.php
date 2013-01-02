@@ -29,7 +29,6 @@
 	<p>Még nyitott szavazással a következőket lehet tenni:
 		<ul>
 			<li>Módosítani a címet és a leírást</li>
-			<li>További válaszlehetőséget hozzáadni</li>
 			<li>További résztvevőket felvenni a szavazáshoz</li>
 			<li>Lezárni. Lezárt szavazásnak csak az eredményét lehet megnézni.</li>
 			<li>Törölni.</li>

@@ -20,7 +20,7 @@ class VotingAdminServiceImpl extends DbServiceBase implements VotingAdminService
 	
 	/**
 	 * Updates the given voting. This voting contains only
-	 * the new answers and participants to insert.
+	 * the new participants to insert.
 	 * 
 	 * @param Voting $voting
 	 */
@@ -31,7 +31,6 @@ class VotingAdminServiceImpl extends DbServiceBase implements VotingAdminService
 			->where('id=?', $voting->getId());
 		$this->db->exec($query);
 
-		$this->insertAnswers($voting->getAnswers(), $voting->getId());
 		$this->insertParticipants($voting->getParticipants(), $voting->getId());
 	}
 	

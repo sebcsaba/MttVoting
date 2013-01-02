@@ -6,7 +6,7 @@ interface VotingAdminService {
 
 	/**
 	 * Updates the given voting. This voting contains only
-	 * the new answers and participants to insert.
+	 * the new participants to insert.
 	 * 
 	 * @param Voting $voting
 	 */

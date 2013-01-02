@@ -47,7 +47,7 @@ class SaveDetailsAction extends SaveActionBase implements Action {
 			$originalVoting->getStartDate(),
 			null,
 			$originalVoting->getPrivate(),
-			$this->getAnswers($request, 0),
+			array(),
 			$this->getParticipants($request));
 	}
 	

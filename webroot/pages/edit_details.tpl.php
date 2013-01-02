@@ -20,7 +20,6 @@
 							<li><?h($answer)?></li>
 						<? } ?>
 					</ul>
-					<input type="text" name="answer_pt" id="answer_prototype" class="full" onfocus="addNewAnswerField();"/>
 				</td>
 			</tr>
 			<tr>
