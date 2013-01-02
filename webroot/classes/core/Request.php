@@ -40,7 +40,7 @@ class Request {
 	}
 	
 	public function isAjax() {
-		return strtolower(I(getallheaders(),'X-Requested-With'))==strtolower('XMLHttpRequest');
+		return strtolower(I($this->headers,'x-requested-with'))==strtolower('XMLHttpRequest');
 	}
 	
 	public function getHeader($name) {

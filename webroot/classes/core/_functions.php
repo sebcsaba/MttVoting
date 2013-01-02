@@ -99,3 +99,19 @@ function implode_assoc(array $array, $betweenKeyAndValue, $beforeItems='', $afte
 	}
 	return $result;
 }
+
+/**
+ * @see http://php.net/manual/en/function.getallheaders.php
+ */
+if (!function_exists('getallheaders')) {
+	function getallheaders() {
+		$out = array();
+		foreach($_SERVER as $key=>$value) {
+			if ('HTTP_' == substr($key,0,5)) {
+				$key = str_replace(' ','-',ucwords(strtolower(str_replace('_',' ',substr($key,5)))));
+				$out[$key] = $value;
+			}
+		}
+		return $out;
+	}
+}
