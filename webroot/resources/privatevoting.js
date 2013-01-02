@@ -20,8 +20,8 @@ function myAjax(data, realSuccess, method) {
 				realSuccess(data);
 			}
 		},
-		error: function(x,y,z) {
-			alert('error: '+x.statusCode);
+		error: function(xhr, textStatus, errorThrown) {
+			alert('error: '+xhr.statusText);
 		}
 	});
 }

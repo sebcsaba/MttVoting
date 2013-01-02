@@ -18,18 +18,25 @@ class RequestHandler {
 	private $database;
 	
 	/**
+	 * @var Config
+	 */
+	private $config;
+	
+	/**
 	 * @var DI
 	 */
 	private $di;
 	
-	public function __construct(AuthenticationService $authenticationService, ApplicationHandler $applicationHandler, Database $database, DI $di) {
+	public function __construct(AuthenticationService $authenticationService, ApplicationHandler $applicationHandler, Database $database, Config $config, DI $di) {
 		$this->authenticationService = $authenticationService;
 		$this->applicationHandler = $applicationHandler;
 		$this->database = $database;
+		$this->config = $config;
 		$this->di = $di;
 	}
 	
 	public function run() {
+		$this->initializePhpEnvironment();
 		try {
 			$this->database->startTransaction();
 			$user = $this->authenticationService->authenticate();
@@ -41,8 +48,7 @@ class RequestHandler {
 			$this->database->commit();
 		} catch (Exception $e) {
 			$this->database->rollback();
-			header('X-Error: '.$this->encodeHeader($e->getMessage()));
-			throw $e;
+			$this->processActionForward($request, new ErrorForward($e->getMessage()));
 		}
 	}
 	
@@ -66,7 +72,13 @@ class RequestHandler {
 			$action = $this->di->get($className);
 			return $action->serve($request);
 		} else if ($forward instanceof ErrorForward) {
-			header('X-Error: '.$this->encodeHeader($forward->getMessage()));
+			$message = $this->handleError($forward->getMessage());
+			if ($request->isAjax()) {
+				header('X-Error: '.$this->encodeHeader($message));
+			} else {
+				$request->setData('message', $message);
+				require_once('pages/error.tpl.php');
+			}
 			return null;
 		}
 	}
@@ -89,6 +101,31 @@ class RequestHandler {
 		$string = quoted_printable_encode($string);
 		$string = preg_replace('/=\s+/','',$string);
 		return '=?UTF-8?Q?'.$string.'?=';
+	}
+	
+	/**
+	 * Handler the given error message, depending on the current lifecycle
+	 * 
+	 * @param string $errorMessage
+	 * @return string The message to show
+	 */
+	private function handleError($errorMessage) {
+		if ('development'==$this->config->get('lifecycle')) {
+			return $errorMessage;
+		} else {
+			$errorLine = sprintf("[%s] from [%s] accessing [%s]: %s\n", date('Y-m-d H:i:s'), $_SERVER['REMOTE_ADDR'], $_SERVER['REQUEST_URI'], $errorMessage);
+			error_log($errorLine, 3, 'temp/error.log');
+			return 'Sajnáljuk, valami hiba történt. Keresd meg vele sebcsabát!';
+		}
+	}
+	
+	private function initializePhpEnvironment() {
+		if ('development'==$this->config->get('lifecycle')) {
+			ini_set('display_errors', 1);
+			error_reporting(E_ALL);
+		} else {
+			ini_set('display_errors', 0);
+		}
 	}
 	
 }
