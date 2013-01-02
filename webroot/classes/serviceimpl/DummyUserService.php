@@ -9,17 +9,14 @@ class DummyUserService implements UserService, AuthenticationService {
 			new User(1, 'alpha'),
 			new User(2, 'beta'),
 			new User(3, 'gamma'),
-		);
+			new User(4, 'delta'),
+			);
 	}
 	
 	/**
 	 * @return User or null
 	 */
 	public function authenticate() {
-		/*if (I(getallheaders(),'X-Requested-With')=='XMLHttpRequest') {
-			return null;
-		}*/
-		//return null;
 		return $this->users[0];
 	}
 	
