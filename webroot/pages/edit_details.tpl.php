@@ -60,6 +60,9 @@
 		<input type="button" onclick="submitForm($('form#edit_detail'));" value="Mentés"/>
 	</form>
 	<hr/>
+	<p>Közvetlen link ehhez a szavazáshoz:</p>
+	<p class="important"><a href="<?h($request->getData('link'))?>"><?h($request->getData('link'))?></a></p>
+	<hr/>
 	<form id="edit_close" action="index.php" method="post" class="voteform onebutton">
 		<input type="hidden" name="do" value="ConfirmClose"/>
 		<input type="hidden" name="id" value="<?h($request->getData('voting')->getId())?>"/>
