@@ -32,6 +32,10 @@ function openPage(page,paramData,skipShowPrefix) {
 		page = 'Show'+page;
 	}
 	paramData['do'] = page;
+	openPageData(paramData);
+}
+
+function openPageData(paramData) {
 	myAjax(paramData,function(data){
 		$('#central-content-for-privatevoting').html(data);
 	});

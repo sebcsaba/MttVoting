@@ -64,7 +64,13 @@
 					<div id="thcm-category-highlights">
 						<ul id="thcm-category-contents">
 							<li id="central-content-for-privatevoting">
-								<? require_once('help.tpl.php'); ?>
+								<? if ($request->has('show')) { ?>
+									<script type="text/javascript">
+										openPageData(<? print($request->get('show'))?>);
+									</script>
+								<? } else { ?>
+									<? require_once('help.tpl.php'); ?>
+								<? } ?>
 							</li>
 						</ul>
 					</div>

@@ -18,6 +18,10 @@ class InitAction implements Action {
 	public function serve(Request $request) {
 		$request->setData('interestingFor', $this->votingListingService->getInterestingFor($request->getUser()));
 		$request->setData('openedOf', $this->votingListingService->getAllOpenedOf($request->getUser()));
+		if ($request->has('show')) {
+			$data = base64_decode($request->get('show'));
+			$request->set('show', $data);
+		}
 		return new PageForward('index');
 	}
 	
